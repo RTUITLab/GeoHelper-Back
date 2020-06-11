@@ -1,0 +1,33 @@
+{
+  "name": "geo-helper-back",
+  "version": "1.0.0",
+  "description": "GeoHelper app backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "IvLaptev",
+  "license": "ISC",
+  "_moduleAliases": {
+    "@root": ".",
+    "@GeoHelper": "./services/GeoHelperAPI",
+    "@GeoHelperModels": "./services/GeoHelperAPI/app/models",
+    "@GeoHelperAPI": "./services/GeoHelperAPI/config/app.js",
+    "@config": "./services/GeoHelperAPI/config/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
+    "mongoose": "^5.9.18",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
+  }
+}
