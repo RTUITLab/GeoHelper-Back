@@ -18,12 +18,12 @@ api.createObject = (Entity, Token) => (req, res) => {
 		req.body.areas.forEach((area, i, areas) => {
 			if (i) additionalLines.push({
 				start: {
-					x: area.points[0].x,
-					y: area.points[0].y
+					lat: area.points[0].lat,
+					lng: area.points[0].lng
 				},
 				end: {
-					x: areas[0].points[0].x,
-					y: areas[0].points[0].y
+					lat: areas[0].points[0].lat,
+					lng: areas[0].points[0].lng
 				}
 			});
 		});
@@ -46,12 +46,12 @@ api.updateObject = (Entity, Token) => (req, res) => {
 		req.body.areas.forEach((area, i, areas) => {
 			if (!!i) additionalLines.push({
 				start: {
-					x: area.points[0].x,
+					lat: area.points[0].lat,
 					y: area.points[0].y
 				},
 				end: {
-					x: areas[0].points[0].x,
-					y: areas[0].points[0].y
+					lat: areas[0].points[0].lat,
+					lng: areas[0].points[0].lng
 				}
 			});
 		});

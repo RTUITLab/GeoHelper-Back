@@ -12,11 +12,11 @@ const Schema = mongoose.Schema({
 	},
 	description: String,
 	position: {
-		x: {
+		lat: {
 			type: Number,
 			required: true
 		},
-		y: {
+		lng: {
 			type: Number,
 			required: true
 		}
@@ -27,20 +27,20 @@ const Schema = mongoose.Schema({
 	areas: [
 		{
 			points: [{
-				x: Number,
-				y: Number
+				lat: Number,
+				lng: Number
 			}]
 		}
 	],
 	additionalLines: [
 		{
 			start: {
-				x: Number,
-				y: Number
+				lat: Number,
+				lng: Number
 			},
 			end: {
-				x: Number,
-				y: Number
+				lat: Number,
+				lng: Number
 			}
 		}
 	]
