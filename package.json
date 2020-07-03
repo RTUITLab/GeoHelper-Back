@@ -4,7 +4,7 @@
   "description": "GeoHelper app backend",
   "main": "index.js",
   "scripts": {
-    "start": "node services"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "IvLaptev",
   "license": "ISC",
@@ -13,6 +13,7 @@
     "@GeoHelper": "./services/GeoHelperAPI",
     "@GeoHelperModels": "./services/GeoHelperAPI/app/models",
     "@GeoHelperAPI": "./services/GeoHelperAPI/config/app.js",
+    "@GeoHelperWS": "./services/GeoHelperAPI/config/ws.js",
     "@config": "./services/GeoHelperAPI/config/index.js"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "multer": "^1.4.2",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "ws": "^7.3.0"
   }
 }

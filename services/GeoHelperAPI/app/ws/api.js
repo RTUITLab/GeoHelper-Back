@@ -1,0 +1,56 @@
+const mongoose = require('mongoose');
+
+checkInclusion = (latLng, lines) => {
+	var inside = false
+
+	lines.forEach((line, i, lines) => {
+		const lat = line.lat[0] + (latLng.lng -line.lng[0]) / (line.lng[1] - line.lng[0]) * (line.lat[1] - line.lat[0])
+
+		if (latLng.lat < line.lat[0] || latLng.lat < line.lat[1]) {
+			if ((line.lng[0] - latLng.lng) * (line.lng[1] - latLng.lng) < 0) {
+				if (lat > latLng.lat) {
+					inside = !inside
+				}
+			}
+		}
+	})
+
+	return inside
+}
+
+const api = {}
+
+api.getObjects = (Entity, latLng, ws) => {
+	var res = { success: true }
+
+	Entity.find({}, (error, data) => {
+		if (error) ws.send(JSON.stringify({ success: false, message: 'Internal error' }))
+		else {
+			res.data = []
+			data.forEach((entity, i, data) => {
+				var lines = []
+				entity.areas.forEach((area, j, areas) => {
+					area.points.forEach((point, k, points) => {
+						if (k > 0) {
+							lines.push({ lat: [points[k-1].lat, point.lat], lng: [points[k-1].lng, point.lng]})
+						} else {
+							lines.push({ lat: [points[points.length-1].lat, point.lat], lng: [points[points.length-1].lng, point.lng]})
+						}
+					})
+				})
+
+				const inside = checkInclusion(latLng, lines)
+
+				if (inside) res.data.push({
+					name: entity.name,
+					type: entity.type,
+					description: entity.description,
+					position: entity.position
+				})
+			})
+			ws.send(JSON.stringify(res))
+		}
+	})
+}
+
+module.exports = api

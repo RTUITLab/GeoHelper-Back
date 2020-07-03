@@ -4,7 +4,7 @@ const passport = require('passport'),
 
 const auth = passport.authenticate('jwt', config.session);
 
-module. exports = (app) => {
+module.exports = (app) => {
 	const api = app.GeoHelperAPI.app.api.entity;
 
 	app.route('/api/v1/objects')

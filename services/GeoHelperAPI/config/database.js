@@ -4,7 +4,8 @@ module.exports = (mongoose, config) => {
 	mongoose.connect(config.database, {
 		useNewUrlParser: true,
 		useCreateIndex: true,
-		useUnifiedTopology: true
+		useUnifiedTopology: true,
+		useFindAndModify: false
 	});
 	database.on('error', error => console.log(`Connection to GeoHelper database failed: ${error}`));
 	database.on('connected', () => console.log('Connected to GeoHelper database'));
