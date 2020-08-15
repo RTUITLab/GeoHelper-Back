@@ -4,8 +4,8 @@ const api = {};
 
 api.setup = (User) => (req, res) => {
 	const admin = new User({
-		username: 'parker',
-		password: 'root666'
+		username: process.env.A_NAME,
+		password: process.env.A_PASS
 	});
 	admin.save(error => {
 		if (error) res.status(400).json({ success: false, message: 'Bad request' });

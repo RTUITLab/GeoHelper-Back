@@ -11,7 +11,7 @@ const express = require('express'),
 			config = require('./index.js'),
 			database = require('./database.js')(mongoose, config);
 
-app.use(express.static('.'));
+app.use(express.static('/back/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
