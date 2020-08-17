@@ -1,3 +1,19 @@
+//
+//
+//	File:	passport.js
+//
+//	By:		Ivan Laptev <ivlaptev13@ya.ru>
+//
+//	Created:	2020-06-06 20:19:23
+//	Updated:	2020-08-16 22:38:47
+//
+//
+
+/*
+ * Description:
+ * Configuration of JWT auth
+ */
+
 const PassportJWT = require('passport-jwt'),
 			ExtractJWT = PassportJWT.ExtractJwt,
 			Strategy = PassportJWT.Strategy,

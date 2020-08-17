@@ -1,3 +1,22 @@
+//
+//
+//	File:	user.js
+//
+//	By:		Ivan Laptev <ivlaptev13@ya.ru>
+//
+//	Created:	2020-06-10 18:58:31
+//	Updated:	2020-08-16 22:13:19
+//
+//
+
+/*
+ * Description:
+ * Contains the description of User collectioni.
+ *
+ * Note:
+ * Database stores only bcrypt hashes of passwords.
+ */
+
 const mongoose = require('mongoose'),
 			bcrypt = require('bcrypt');
 
@@ -13,6 +32,7 @@ const Schema = mongoose.Schema({
 	}
 });
 
+// Creating password hash before saving pass
 Schema.pre('save', function (next) {
 	const user = this;
 	if (this.isModified('password') || this.isNew) {
