@@ -25,4 +25,4 @@ To run this application run `node services`.
 
 ## API Documentation
 
-Description of GeoHelper Backend is available [here](https://documenter.getpostman.com/view/8340120/T1LQfQfY).
+Description of GeoHelper Backend API is available [here](https://documenter.getpostman.com/view/8340120/T1LQfQfY).
