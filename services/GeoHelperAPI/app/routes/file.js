@@ -22,12 +22,6 @@ const auth = passport.authenticate('jwt', config.session);
 module.exports = (app) => {
 	const api = app.GeoHelperAPI.app.api.file;
 
-	app.route('/api/v1/upload/create_file')
-		.post(auth, api.createFile(app.get('geohelpersecret')));
-
-	app.route('/api/v1/upload/upload_chunk')
-		.put(auth, api.uploadChunk(app.get('geohelpersecret')));
-
 	app.route('/api/v1/upload')
 		.post(auth, api.upload(app.get('geohelpersecret')));
 }
