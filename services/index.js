@@ -20,6 +20,7 @@
  */
 
 require('module-alias/register');
+require('dotenv').config();
 const http = require('http'),
 			GeoHelperAPI = require('@GeoHelperAPI'),
 			GeoHelperServer = http.Server(GeoHelperAPI),

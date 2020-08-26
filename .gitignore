@@ -1,1 +1,4 @@
 Dockerfile
+uploads
+.env
+node_modules

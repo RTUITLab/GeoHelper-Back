@@ -20,6 +20,9 @@ const passport = require('passport'),
 
 const auth = passport.authenticate('jwt', config.session);
 
+const F_AUDIO = 1,
+			F_MODEL = 2;
+
 module.exports = (app) => {
 	const api = app.GeoHelperAPI.app.api.entity;
 
@@ -34,4 +37,7 @@ module.exports = (app) => {
 
 	app.route('/api/v1/object')
 		.delete(auth, api.deleteObject(models.Entity, app.get('geohelpersecret')));
+
+	app.route('/api/v1/upload_audio')
+		.put(auth, api.loadFile(F_AUDIO, app.get('geohelpersecret')));
 }

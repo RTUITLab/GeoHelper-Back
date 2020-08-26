@@ -14,6 +14,7 @@
  * Functions that are working with Objects.
  *
  * Functions:
+ * getFile: uploads file to the server.
  * getObjects: returns list of all Objects that are stored by database.
  * createObject: creates new Object and pushes it into database.
  *  Function also adds additional lines that are necessary to detect if user is
@@ -27,17 +28,28 @@ const mongoose = require('mongoose');
 
 const api = {};
 
+const modes = {
+	F_AUDIO: 1,
+	F_MODEL: 2
+};
+
 // Checks if Object from request is valid
 validEntity = (entity) => {
 	if (entity.type)
 		if (entity.areas && entity.position) {
 			if (entity.type == "text" && entity.description)
 				return true;
+			if (entity.type == "audio" && entity.url)
+				return true;
 			// Checks of validity for other types of Objects
 		}
 	return false;
 }
 
+api.loadFile = (mode, Token) => (req, res) => {
+	console.log(req.headers['content-length']);
+	return res.status(201).send({ success: true, message: 'File uploaded' });
+}
 api.getObjects = (Entity, Token) => (req, res) => {
 	if (Token) {
 		Entity.find({}, (error, entities) => {

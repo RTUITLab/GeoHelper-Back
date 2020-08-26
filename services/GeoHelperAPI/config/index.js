@@ -20,7 +20,7 @@ const M_USER = process.env.M_USER,
 			M_PORT = process.env.M_PORT,
 			M_DB = process.env.M_DB
 
-const url = `mongodb://${M_USER}:${M_PASS}@${M_HOST}:${M_PORT}/${M_DB}?authSource=admin`;
+const url = process.env.M_URL || `mongodb://${M_USER}:${M_PASS}@${M_HOST}:${M_PORT}/${M_DB}?authSource=admin`;
 
 console.log(url);
 

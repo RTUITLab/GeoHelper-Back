@@ -25,12 +25,14 @@ const express = require('express'),
 			passportConfig = require('./passport')(passport),
 			jwt = require('jsonwebtoken'),
 			config = require('./index.js'),
-			database = require('./database.js')(mongoose, config);
+			database = require('./database.js')(mongoose, config),
+			multer = require('multer');
 
 // Connect frontend files
 app.use(express.static('/back/dist'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '25mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '25mb' }));
+app.use(multer({ dest: process.env.UPLOAD_DIR }).single("file"));
 app.use(morgan('dev'));
 app.use(cors());
 app.use(passport.initialize());
