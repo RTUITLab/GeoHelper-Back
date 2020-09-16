@@ -5,7 +5,7 @@
 //	By:		Ivan Laptev <ivlaptev13@ya.ru>
 //
 //	Created:	2020-06-10 12:04:29
-//	Updated:	2020-08-16 21:31:31
+//	Updated:	2020-08-27 18:11:54
 //
 //
 
@@ -123,6 +123,14 @@ api.updateObject = (Entity, Token) => (req, res) => {
 
 api.deleteObject = (Entity, Token) => (req, res) => {
 	if (Token) {
+		try {
+      fs.unlink(process.env.UPLOAD_DIR + '/' + req.body.url, () => {
+        console.log(`File ${req.body.url} removed`);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
 		Entity.findByIdAndDelete(req.body._id, (error) => {
 			if (error) res.status(400).json({ success: false, message: 'Bad request' });
 			else res.status(200).json({ success: true, message: 'Object deleted successfully' });

@@ -5,7 +5,7 @@
 //	By:		Ivan Laptev <ivlaptev13@ya.ru>
 //
 //	Created:	2020-06-06 22:06:43
-//	Updated:	2020-08-16 18:24:42
+//	Updated:	2020-08-26 16:35:47
 //
 //
 
@@ -20,7 +20,6 @@
  */
 
 require('module-alias/register');
-require('dotenv').config();
 const http = require('http'),
 			GeoHelperAPI = require('@GeoHelperAPI'),
 			GeoHelperServer = http.Server(GeoHelperAPI),
