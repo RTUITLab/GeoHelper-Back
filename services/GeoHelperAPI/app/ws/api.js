@@ -65,6 +65,7 @@ api.getObjects = (Entity, latLng, ws) => {
 				const inside = checkInclusion(latLng, lines);
 
 				if (inside) res.data.push({
+					id: entity._id,
 					name: entity.name,
 					type: entity.type,
 					description: entity.description,
