@@ -1,6 +1,6 @@
 # GeoHelper Back
 
-> Node.js application having [GeoHelper-Front](https://github.com/IvLaptev/GeoHelper-Front) as a frontend
+> Node.js application having [GeoHelper-Front](https://github.com/RTUITLab/GeoHelper-Front) as a frontend
 
 ## Configuration
 
