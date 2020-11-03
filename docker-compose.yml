@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   back:
-    build: .
+    image: rtuitlab/geohelper-back
     environment:
     - M_USER=admin
     - M_PASS=root
