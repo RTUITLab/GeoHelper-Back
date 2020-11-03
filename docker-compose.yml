@@ -13,8 +13,6 @@ services:
     - A_USER=test
     - A_PASS=test123
     - PORT=3001
-    ports:
-    - 3001:3001
 
   mongo:
     image: mongo

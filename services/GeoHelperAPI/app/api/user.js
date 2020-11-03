@@ -28,6 +28,7 @@ api.setup = (User) => (req, res) => {
 		password: process.env.A_PASS
 	});
 	admin.save(error => {
+		console.log(error);
 		if (error) res.status(400).json({ success: false, message: 'Bad request' });
 		else res.json({ success: true });
 	});
