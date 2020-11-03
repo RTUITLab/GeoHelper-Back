@@ -14,6 +14,8 @@
  * Configuration of application.
  */
 
+require("dotenv").config();
+
 const M_USER = process.env.M_USER,
 			M_PASS = process.env.M_PASS,
 			M_HOST = process.env.M_HOST,
@@ -21,6 +23,8 @@ const M_USER = process.env.M_USER,
 			M_DB = process.env.M_DB
 
 const url = process.env.M_URL || `mongodb://${M_USER}:${M_PASS}@${M_HOST}:${M_PORT}/${M_DB}?authSource=admin`;
+
+console.log(process.env.M_SECRET);
 
 console.log(url);
 
