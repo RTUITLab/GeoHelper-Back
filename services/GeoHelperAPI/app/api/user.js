@@ -24,7 +24,7 @@ const api = {};
 
 api.setup = (User) => (req, res) => {
 	const admin = new User({
-		username: process.env.A_NAME,
+		username: process.env.A_USER,
 		password: process.env.A_PASS
 	});
 	admin.save(error => {
