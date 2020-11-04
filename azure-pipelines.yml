@@ -14,3 +14,10 @@ steps:
       $(Build.BuildId)
       latest
     addPipelineData: false
+
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'swarm manager'
+    runOptions: 'commands'
+    commands: 'docker service update --image rtuitlab/geohelper-back:$(Build.BuildId) geohelper_back'
+    readyTimeout: '20000'
