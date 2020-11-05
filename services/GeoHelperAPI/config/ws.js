@@ -19,7 +19,7 @@ const WebSocket = require('ws'),
 			models = require('@GeoHelper/app/setup');
 
 module.exports = (server) => {
-	const wss = new WebSocket.Server({ server });
+	const wss = new WebSocket.Server({ server: server, path: '/api/test' });
 
 	wss.on('connection', (ws) => {
 		ws.on('message', (message) => {
