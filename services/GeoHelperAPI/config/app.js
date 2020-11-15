@@ -30,7 +30,7 @@ const express = require('express'),
 
 // Connect frontend files
 console.log('File storage: /usr/src/app/' + process.env.UPLOAD_DIR);
-app.use('/' + process.env.UPLOAD_DIR, express.static('/usr/src/app/' + process.env.UPLOAD_DIR));
+app.use('/' + process.env.UPLOAD_DIR, express.static(process.env.UPLOAD_DIR));
 app.use(bodyParser.json({limit: '25mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '25mb' }));
 app.use(multer({ dest: process.env.UPLOAD_DIR }).single("file"));
