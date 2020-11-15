@@ -13,6 +13,7 @@ services:
     - A_USER=test
     - A_PASS=test123
     - PORT=3001
+    - UPLOAD_DIR=uploads
 
   mongo:
     image: mongo
