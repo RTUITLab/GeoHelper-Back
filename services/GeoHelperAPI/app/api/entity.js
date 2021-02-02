@@ -41,6 +41,8 @@ validEntity = (entity) => {
 				return true;
 			if (entity.type == "audio" && entity.url)
 				return true;
+			if (entity.type == "object" && entity.url)
+				return true;
 			// Checks of validity for other types of Objects
 		}
 	return false;

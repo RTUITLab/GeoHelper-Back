@@ -37,6 +37,9 @@ const Schema = mongoose.Schema({
 			required: true
 		}
 	},
+	fileName: {
+		type: String
+	},
 	url: {
 		type: String
 	},
