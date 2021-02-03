@@ -69,7 +69,8 @@ api.getObjects = (Entity, latLng, ws) => {
 					name: entity.name,
 					type: entity.type,
 					description: entity.description,
-					position: entity.position
+					position: entity.position,
+					url: entity.url
 				});
 			})
 			ws.send(JSON.stringify(res));
