@@ -15,11 +15,37 @@
  */
 
 const fs = require('fs');
+const JSZip = require('jszip');
 
 const api = {};
 
 api.upload = (Token) => (req, res) => {
 	if (Token) {
+    console.log(process.env.UPLOAD_DIR + '/' + req.file.filename);
+
+    let dirName = req.file.filename.split('.')[0];
+
+    fs.readFile(process.env.UPLOAD_DIR + '/' + req.file.filename, (err, data) => {
+      JSZip.loadAsync(data)
+        .then(async(zip) => {
+          fs.mkdirSync(process.env.UPLOAD_DIR + '/' + dirName);
+
+          Object.keys(zip.files).forEach(function(filename) {
+            zip.file(filename).async('nodebuffer').then(function(content) {
+              var dest = process.env.UPLOAD_DIR + '/' + dirName + '/' + filename;
+              console.log(dest)
+              fs.writeFileSync(dest, content);
+            });
+          });
+
+    fs.readdir(process.env.UPLOAD_DIR + '/' + req.file.filename, (err, data) => {
+      console.log(data);
+    })
+
+
+        });
+    });
+    
 		return res.status(201).send({
 			success: true,
 			message: 'Success',

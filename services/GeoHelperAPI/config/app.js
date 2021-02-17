@@ -25,17 +25,28 @@ const express = require('express'),
 			passportConfig = require('./passport')(passport),
 			jwt = require('jsonwebtoken'),
 			config = require('./index.js'),
+			{ v4: uuidv4 } = require('uuid'),
 			database = require('./database.js')(mongoose, config),
 			multer = require('multer');
+
+app.use(cors());
 
 // Connect frontend files
 console.log('File storage: /usr/src/app/' + process.env.UPLOAD_DIR);
 app.use('/' + process.env.UPLOAD_DIR, express.static(process.env.UPLOAD_DIR));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
-app.use(multer({ dest: process.env.UPLOAD_DIR }).single("file"));
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, process.env.UPLOAD_DIR)
+	},
+	filename: (req, file, cb) => {
+		cb(null, uuidv4() + '.' + file.originalname.split('.').pop())
+	}
+})
+app.use(multer({ storage: storage, dest: process.env.UPLOAD_DIR  }).single("file"));
 app.use(morgan('dev'));
-app.use(cors());
 app.use(passport.initialize());
 
 app.set('geohelpersecret', config.secret);

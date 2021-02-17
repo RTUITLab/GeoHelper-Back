@@ -8,5 +8,7 @@ RUN npm ci
 
 COPY . .
 
+RUN mkdir uploads
+
 EXPOSE 3001
 CMD [ "node", "services" ]
