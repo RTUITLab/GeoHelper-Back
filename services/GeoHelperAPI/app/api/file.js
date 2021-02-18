@@ -31,11 +31,15 @@ api.upload = (Token) => (req, res) => {
           fs.mkdirSync(process.env.UPLOAD_DIR + '/' + dirName);
 
           Object.keys(zip.files).forEach(function(filename) {
-            zip.file(filename).async('nodebuffer').then(function(content) {
-              var dest = process.env.UPLOAD_DIR + '/' + dirName + '/' + filename;
-              console.log(dest)
-              fs.writeFileSync(dest, content);
-            });
+            if (zip.file(filename) && !zip.file(filename).dir) {
+              zip.file(filename).async('nodebuffer').then(function(content) {
+                var dest = process.env.UPLOAD_DIR + '/' + dirName + '/' + filename;
+                console.log(filename)
+                fs.writeFileSync(dest, content);
+              });
+            } else {
+              fs.mkdirSync(process.env.UPLOAD_DIR + '/' + dirName + '/' + filename);
+            }
           });
 
     fs.readdir(process.env.UPLOAD_DIR + '/' + req.file.filename, (err, data) => {
