@@ -16,6 +16,7 @@ After setting up database, you have to define env variables:
 + `PORT`: port where application will be launched
 + `A_USER`: name of default user
 + `A_PASS`: default user password
++ `GOOGLE_API_KEY`: Google Maps API key to access for DirectionsAPI
 
 Another way to set up database is to define `M_URL` variable.
 
