@@ -1,23 +1,3 @@
-//
-//
-//	File:	user.js
-//
-//	By:		Ivan Laptev <ivlaptev13@ya.ru>
-//
-//	Created:	2020-06-07 00:44:48
-//	Updated:	2020-08-16 22:06:55
-//
-//
-
-/*
- * Description:
- * Functions that are manage users.
- *
- * Functions:
- * Setup: creates default admin user.
- * Index: returns a list of all users.
- */
-
 const mongoose = require('mongoose');
 
 const api = {};
