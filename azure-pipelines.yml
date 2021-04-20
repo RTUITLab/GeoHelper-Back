@@ -19,5 +19,5 @@ steps:
   inputs:
     sshEndpoint: 'swarm manager'
     runOptions: 'commands'
-    commands: 'docker service update --image rtuitlab/geohelper-back:$(Build.BuildId) geohelper_back'
+    commands: 'docker service update --image rtuitlab/geohelper-back:$(Build.BuildId) geohelper_back --with-registry-auth'
     readyTimeout: '20000'
