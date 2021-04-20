@@ -6,17 +6,16 @@ const api = {};
 
 api.getDirection = (Entity, Token) => (req, res) => {
     if (Token) {
-        const destination = req.query.destination;
-        let lat = req.query.lat;
-        let lng = req.query.lng;
+        let destination = req.query.destination;
+        const lat = req.query.lat;
+        const lng = req.query.lng;
         const entity = { _id: req.query.objectId };
 
         if (objectId) {
             Entity.findOne({ _id: objectId }, (error, _entity) => {
                 if (error) return res.status(400).json({ success: false, message: 'Object not found' });
                 else {
-                    lat = _entity.position.lat;
-                    lng = _entity.position.lng;
+                    destination = `${_entity.position.lat},${_entity.position.lng}`;
                     entity.position = _entity.position;
                     entity.type = _entity.type;
                 }
@@ -73,7 +72,7 @@ api.getDirection = (Entity, Token) => (req, res) => {
                     } else {
                         return res.status(200).send({ success: true, message: {
                             end_location: {
-                                _entity
+                                entity
                             },
                             steps: data
                         }});
