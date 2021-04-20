@@ -11,8 +11,8 @@ api.getDirection = (Entity, Token) => (req, res) => {
         const lng = req.query.lng;
         const entity = { _id: req.query.objectId };
 
-        if (objectId) {
-            Entity.findOne({ _id: objectId }, (error, _entity) => {
+        if (entity._id) {
+            Entity.findOne({ _id: entity._id }, (error, _entity) => {
                 if (error) return res.status(400).json({ success: false, message: 'Object not found' });
                 else {
                     destination = `${_entity.position.lat},${_entity.position.lng}`;
