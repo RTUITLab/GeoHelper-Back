@@ -1,15 +1,27 @@
-const https = require('https');
 const { Client } = require('@googlemaps/google-maps-services-js');
 
 const mapClient = new Client({});
 
 const api = {};
 
-api.getDirection = (Token) => (req, res) => {
+api.getDirection = (Entity, Token) => (req, res) => {
     if (Token) {
         const destination = req.query.destination;
-        const lat = req.query.lat;
-        const lng = req.query.lng;
+        let lat = req.query.lat;
+        let lng = req.query.lng;
+        const entity = { _id: req.query.objectId };
+
+        if (objectId) {
+            Entity.findOne({ _id: objectId }, (error, _entity) => {
+                if (error) return res.status(400).json({ success: false, message: 'Object not found' });
+                else {
+                    lat = _entity.position.lat;
+                    lng = _entity.position.lng;
+                    entity.position = _entity.position;
+                    entity.type = _entity.type;
+                }
+            });
+        }
 
         if (!destination || !lat || !lng) {
             return res.status(400).send({ success: false, message: 'Destination, latitude and longitude must be defined in query' });
@@ -30,7 +42,7 @@ api.getDirection = (Token) => (req, res) => {
                     return res.status(400).send({ success: false, message: 'No way' });
                 }
 
-                if (!req.query.compact) {
+                if (!req.query.compact && !entity._id) {
                     return res.status(200).send({ success: true, message: r.data });
                 } else {
                     const data = [];
@@ -46,17 +58,26 @@ api.getDirection = (Token) => (req, res) => {
                         last = currentStep.end_location;
                     }
 
-                    return res.status(200).send({ success: true, message: {
-                        start_location: {
-                            address: r.data.routes[0].legs[0].start_address,
-                            position: r.data.routes[0].legs[0].start_location
-                        },
-                        end_location: {
-                            address: r.data.routes[0].legs[0].end_address,
-                            position: r.data.routes[0].legs[0].end_location
-                        },
-                        steps: data
-                    } });
+                    if (!entity._id) {
+                        return res.status(200).send({ success: true, message: {
+                            start_location: {
+                                address: r.data.routes[0].legs[0].start_address,
+                                position: r.data.routes[0].legs[0].start_location
+                            },
+                            end_location: {
+                                address: r.data.routes[0].legs[0].end_address,
+                                position: r.data.routes[0].legs[0].end_location
+                            },
+                            steps: data
+                        }});
+                    } else {
+                        return res.status(200).send({ success: true, message: {
+                            end_location: {
+                                _entity
+                            },
+                            steps: data
+                        }});
+                    }
                 }
             })
             .catch(e => console.log(e));

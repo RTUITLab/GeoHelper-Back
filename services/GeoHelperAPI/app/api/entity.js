@@ -1,37 +1,6 @@
-//
-//
-//	File:	entity.js
-//
-//	By:		Ivan Laptev <ivlaptev13@ya.ru>
-//
-//	Created:	2020-06-10 12:04:29
-//	Updated:	2020-08-27 18:11:54
-//
-//
-
-/*
- * Description:
- * Functions that are working with Objects.
- *
- * Functions:
- * getFile: uploads file to the server.
- * getObjects: returns list of all Objects that are stored by database.
- * createObject: creates new Object and pushes it into database.
- *  Function also adds additional lines that are necessary to detect if user is
- *  inside Object's field of visibility.
- * updateObject: changes different fields of the Object that has the same id
- *  inside database. It creates new additional lines.
- * deleteObject: delete Object that has the same id from database.
- */
-
 const mongoose = require('mongoose');
 
 const api = {};
-
-const modes = {
-	F_AUDIO: 1,
-	F_MODEL: 2
-};
 
 // Checks if Object from request is valid
 validEntity = (entity) => {
