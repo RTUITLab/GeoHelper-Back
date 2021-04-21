@@ -4,7 +4,7 @@ const mapClient = new Client({});
 
 const api = {};
 
-api.getDirection = (Entity, Token) => (req, res) => {
+api.getDirection = (Entity, Token) => async (req, res) => {
     if (Token) {
         let destination = req.query.destination;
         const lat = req.query.lat;
