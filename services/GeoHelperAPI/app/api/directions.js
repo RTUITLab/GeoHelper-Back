@@ -16,6 +16,8 @@ api.getDirection = (Entity, Token) => (req, res) => {
                 if (error) return res.status(400).json({ success: false, message: 'Object not found' });
                 else {
                     destination = `${_entity.position.lat},${_entity.position.lng}`;
+                    console.log(_entity);
+                    console.log(destination);
                     entity.position = _entity.position;
                     entity.type = _entity.type;
                 }
