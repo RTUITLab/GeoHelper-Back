@@ -12,16 +12,15 @@ api.getDirection = (Entity, Token) => (req, res) => {
         const entity = { _id: req.query.objectId };
 
         if (entity._id) {
-            Entity.findOne({ _id: entity._id }, (error, _entity) => {
-                if (error) return res.status(400).json({ success: false, message: 'Object not found' });
-                else {
-                    destination = `${_entity.position.lat},${_entity.position.lng}`;
-                    console.log(_entity);
-                    console.log(destination);
-                    entity.position = _entity.position;
-                    entity.type = _entity.type;
-                }
-            });
+            try {
+                const _entity = await Entity.findOne({ _id: entity._id }).exec();
+
+                destination = `${_entity.position.lat},${_entity.position.lng}`;
+                entity.position = _entity.position;
+                entity.type = _entity.type;
+            } catch (error) {
+                return res.status(400).json({ success: false, message: 'Object not found' });
+            }
         }
 
         if (!destination || !lat || !lng) {
