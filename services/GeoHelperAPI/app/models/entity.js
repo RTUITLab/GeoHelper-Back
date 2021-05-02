@@ -1,19 +1,3 @@
-//
-//
-//	File:	entity.js
-//
-//	By:		Ivan Laptev <ivlaptev13@ya.ru>
-//
-//	Created:	2020-06-10 12:04:55
-//	Updated:	2020-08-17 10:56:15
-//
-//
-
-/*
- * Description:
- * Contains the description of Entity collection
- */
-
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema({
@@ -24,7 +8,7 @@ const Schema = mongoose.Schema({
 	type: {
 		type: String,
 		required: true,
-		enum: ['text', 'image', 'video', 'object', 'audio']
+		enum: ['text', 'object', 'audio', 'excursion']
 	},
 	description: String,
 	position: {
@@ -43,6 +27,19 @@ const Schema = mongoose.Schema({
 	url: {
 		type: String
 	},
+	files: [
+		{
+			type: {
+				type: String
+			},
+			fileName: {
+				type: String
+			},
+			url: {
+				type: String
+			}
+		}
+	],
 	areas: [
 		{
 			points: [{

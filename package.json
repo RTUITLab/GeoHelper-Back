@@ -12,6 +12,7 @@
   "_moduleAliases": {
     "@root": ".",
     "@GeoHelper": "./services/GeoHelperAPI",
+    "@GeoHelperDtos": "./services/GeoHelperAPI/app/api/dtos",
     "@GeoHelperModels": "./services/GeoHelperAPI/app/models",
     "@GeoHelperAPI": "./services/GeoHelperAPI/config/app.js",
     "@GeoHelperWS": "./services/GeoHelperAPI/config/ws.js",
