@@ -1,25 +1,5 @@
-//
-//
-//	File:	api.js
-//
-//	By:		Ivan Laptev <ivlaptev13@ya.ru>
-//
-//	Created:	2020-06-27 01:12:56
-//	Updated:	2020-08-16 22:30:21
-//
-//
-
-/*
- * Description:
- * Implements WebSocket functional of application.
- *
- * Functions:
- * CheckInclusion: checks if received coordinates fall into field of visibility
- *  of one Object.
- * GetObjects: find Objects that are visible from received coordinates.
- */
-
 const mongoose = require('mongoose');
+const EntityDto = require('@GeoHelperDtos/entity.js');
 
 checkInclusion = (latLng, lines) => {
 	var inside = false;
@@ -68,6 +48,7 @@ api.getObjects = (Entity, latLng, ws) => {
 				const inside = checkInclusion(latLng, lines);
 
 				if (inside) {
+					entity = EntityDto.setObjectToResponse(entity);
 					if (entity.type === 'text') {
 						res.poiObjectModels.push({
 							id: entity._id,
