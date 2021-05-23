@@ -32,10 +32,11 @@ api.getObjects = (Entity, latLng, ws) => {
 			res.poiObjectModels = [];
 			res.geoAudioObjectModels = [];
 			res.geo3dObjectModels = [];
+			res.geoExcursionObjectModels = [];
 
-			data.forEach((entity, i, data) => {
+			data.forEach((entity) => {
 				var lines = [];
-				entity.areas.forEach((area, j, areas) => {
+				entity.areas.forEach((area) => {
 					area.points.forEach((point, k, points) => {
 						if (k > 0) {
 							lines.push({ lat: [points[k-1].lat, point.lat], lng: [points[k-1].lng, point.lng]})
@@ -72,6 +73,15 @@ api.getObjects = (Entity, latLng, ws) => {
 							type: entity.type,
 							position: entity.position,
 							url: entity.url
+						});
+					} else if (entity.type === 'excursion') {
+						res.geoExcursionObjectModels.push({
+							id: entity._id,
+							name: entity.name,
+							type: entity.type,
+							description: entity.description,
+							position: entity.position,
+							files: entity.files
 						});
 					}
 				}
