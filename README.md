@@ -22,6 +22,7 @@ Another way to set up database is to define `M_URL` variable.
 
 In the end, run `npm install` to install all required dependences.
 
+
 ## Building
 
 To run this application run `node services`.
