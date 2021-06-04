@@ -86,6 +86,7 @@ api.getObjects = (Entity, latLng, ws) => {
 					}
 				}
 			})
+			console.log(res);
 			ws.send(JSON.stringify(res));
 		}
 	})

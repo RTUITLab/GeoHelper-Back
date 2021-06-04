@@ -31,6 +31,11 @@ const express = require('express'),
 
 app.use(cors());
 
+app.use((req, res, next) => {
+	console.log(req);
+	next();
+});
+
 // Connect frontend files
 console.log('File storage: /usr/src/app/' + process.env.UPLOAD_DIR);
 app.use('/' + process.env.UPLOAD_DIR, express.static(process.env.UPLOAD_DIR));
@@ -57,5 +62,10 @@ consign({ cwd: 'services'})
 	.then('GeoHelperAPI/app/api')
 	.then('GeoHelperAPI/app/routes')
 	.into(app);
+
+app.use((req, res, next) => {
+	console.log(res);
+	next();
+});
 
 module.exports = app;
