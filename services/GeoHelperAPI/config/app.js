@@ -32,7 +32,8 @@ const express = require('express'),
 app.use(cors());
 
 app.use((req, res, next) => {
-	console.log(req);
+	console.log(req.body);
+	console.log(req.headers);
 	next();
 });
 
@@ -62,10 +63,5 @@ consign({ cwd: 'services'})
 	.then('GeoHelperAPI/app/api')
 	.then('GeoHelperAPI/app/routes')
 	.into(app);
-
-app.use((req, res, next) => {
-	console.log(res);
-	next();
-});
 
 module.exports = app;
