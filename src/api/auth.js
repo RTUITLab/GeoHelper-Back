@@ -18,7 +18,7 @@ module.exports = (app) => {
         password: req.body.password
       });
 
-      res.json(credentials);
+      res.json({ success: true, message: 'Token granted', ...credentials });
     } catch (e) {
       console.error(e);
       res.status(400).json({ success: false, message: e.message });

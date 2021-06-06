@@ -1,6 +1,6 @@
 const Router = require('express').Router;
-const authenticateJwt = require('./middleware/authenticateJwt');
 const auth = require('./auth');
+const entity = require('./entity');
 
 module.exports = () => {
   const app = new Router();
@@ -9,6 +9,7 @@ module.exports = () => {
   app.get('/', (req, res) => res.redirect(301, "https://documenter.getpostman.com/view/8340120/T1LQfQfY"));
 
   auth(app);
+  entity(app);
 
   return app;
 }

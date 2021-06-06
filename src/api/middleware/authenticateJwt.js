@@ -22,8 +22,8 @@ module.exports = (req, res, next) => {
       }
 
       User.findOne({ id: user._id }, (error, user) => {
-        if (error) res.status(401).json({ success: false, message: 'Unknown user'});
-        if (user) next();
+        if (error) return res.status(401).json({ success: false, message: 'Unknown user'});
+        if (user) return next();
         return res.status(401).json({ success: false, message: 'Unknown user'});
       });
     });

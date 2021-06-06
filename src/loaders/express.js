@@ -27,7 +27,6 @@ module.exports = async (app) => {
   });
 
   app.use((err, req, res, next) => {
-    console.log('sdsdsd');
     res.status(err.status || 500);
     res.json({
       success: false,

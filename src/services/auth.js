@@ -12,7 +12,7 @@ module.exports = {
         found.comparePassword(user.password, (error, matches) => {
           if (matches && !error) {
             const token = jwt.sign({ user }, config.secret);
-            resolve({ success: true, message: 'Token granted', token, found});
+            resolve({token, found});
           } else {
             reject({ message: 'Неверный пароль' });
           }
