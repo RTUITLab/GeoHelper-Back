@@ -20,7 +20,7 @@ After setting up database, you have to define env variables:
 
 Another way to set up database is to define `M_URL` variable.
 
-In the end, run `npm install` to install all required dependences.
+In the end, run `npm install` to install all required dependencies.
 
 
 ## Building
