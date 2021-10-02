@@ -2,3 +2,6 @@
 uploads
 .env.local
 node_modules
+tests/e2e/GeoHelper-Tests/.idea
+tests/e2e/GeoHelper-Tests/target
+
