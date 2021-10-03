@@ -37,4 +37,6 @@ router.post('/setup', async (req, res) => {
  */
 module.exports = (app) => {
   app.use('/auth', router);
+
+  console.log('+ + Auth API');
 }

@@ -23,7 +23,6 @@ module.exports = (secret, config, apiPrefix) => {
         let token = req.headers.authorization;
         if (token) {
           token = token.split(' ').pop();
-          console.log(token);
         }
         if (!token || token.split('.').length !== 3) {
           res.status(401).json({ message: 'Invalid token' });

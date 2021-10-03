@@ -1,5 +1,9 @@
-const authValidators = require('./auth');
+const authValidators = require('./authValidators');
+const entityValidators = require('./entityValidators');
+const fileValidators = require('./fileValidators');
 
 module.exports = {
-  auth: authValidators
+  auth: authValidators,
+  entity: entityValidators,
+  file: fileValidators
 }

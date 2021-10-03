@@ -1,6 +1,8 @@
 const express = require('express');
 
 const authApi = require('./auth');
+const entityApi = require('./entity');
+const fileApi = require('./file');
 
 /**
  *
@@ -14,6 +16,8 @@ module.exports = () => {
   });
 
   authApi(app);
+  entityApi(app);
+  fileApi(app);
 
   return app;
 }

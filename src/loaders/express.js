@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const security = require('../middleware/security');
+const upload = require('../middleware/upload');
 
 const config = require('../config');
 const routes = require('@/api');
@@ -28,6 +29,8 @@ module.exports = async (app) => {
     { route: '/object', role: 'admin', methods: ['*'] },
   ], config.apiPrefix));
 
+  app.use(upload());
+
   app.use(bodyParser.json());
   app.use(config.apiPrefix, routes());  // Adds routing
 
@@ -38,6 +41,7 @@ module.exports = async (app) => {
   });
 
   app.use((err, req, res, next) => {
+    console.error(err);
     res.status(err.status || 500);
     res.json({
       success: false,
