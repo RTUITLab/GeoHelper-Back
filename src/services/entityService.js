@@ -31,6 +31,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       Entity.findByIdAndRemove(id, (error) => {
         if (error) {
+          console.error(error);
           reject({ message: `Can't delete object` });
         } else {
           resolve();
