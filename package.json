@@ -1,42 +1,29 @@
 {
-  "name": "geo-helper-back",
-  "version": "1.0.0",
+  "name": "geohelper-back",
+  "version": "2.0.0",
   "description": "GeoHelper app backend",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node services",
+    "start": "node src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "IvLaptev",
-  "license": "ISC",
-  "_moduleAliases": {
-    "@root": ".",
-    "@GeoHelper": "./services/GeoHelperAPI",
-    "@GeoHelperDtos": "./services/GeoHelperAPI/app/api/dtos",
-    "@GeoHelperModels": "./services/GeoHelperAPI/app/models",
-    "@GeoHelperAPI": "./services/GeoHelperAPI/config/app.js",
-    "@GeoHelperWS": "./services/GeoHelperAPI/config/ws.js",
-    "@config": "./services/GeoHelperAPI/config/index.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RTUITLab/GeoHelper-Back.git"
   },
+  "_moduleAliases": {
+    "@": "./src"
+  },
+  "author": "ivlaptev13@ya.ru",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RTUITLab/GeoHelper-Back/issues"
+  },
+  "homepage": "https://github.com/RTUITLab/GeoHelper-Back#readme",
   "dependencies": {
-    "@googlemaps/google-maps-services-js": "^3.1.16",
-    "bcrypt": "^4.0.1",
-    "body-parser": "^1.19.0",
-    "consign": "^0.1.6",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "fs": "0.0.1-security",
-    "jsonwebtoken": "^8.5.1",
-    "jszip": "^3.6.0",
     "module-alias": "^2.2.2",
-    "mongoose": "^5.9.18",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.2",
-    "nodemon": "^2.0.4",
-    "passport": "^0.4.1",
-    "passport-jwt": "^4.0.0",
-    "uuid": "^8.3.0",
-    "ws": "^7.3.0"
+    "morgan": "^1.10.0"
   }
 }
