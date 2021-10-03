@@ -27,6 +27,7 @@ module.exports = async (app) => {
   app.use(security(config.secret, [
     { route: '/objects', role: 'user', methods: ['GET'] },
     { route: '/object', role: 'admin', methods: ['*'] },
+    { route: '/direction', role: 'admin', methods: ['*'] },
   ], config.apiPrefix));
 
   app.use(upload());
