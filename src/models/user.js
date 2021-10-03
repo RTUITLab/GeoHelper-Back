@@ -17,7 +17,7 @@ const Schema = mongoose.Schema({
   }
 });
 
-// Creating password hash before saving pass
+// Creating password hash before saving password
 Schema.pre('save', function (next) {
   const user = this;
   bcrypt.genSalt(10, (error, salt) => {

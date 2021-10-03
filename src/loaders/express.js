@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const security = require('../middleware/security');
+
 const config = require('../config');
 const routes = require('@/api');
 
@@ -20,6 +22,11 @@ module.exports = async (app) => {
 
   app.enable('trust proxy');
   app.use(cors());
+
+  app.use(security(config.secret, [
+    { route: '/objects', role: 'user', methods: ['GET'] },
+    { route: '/object', role: 'admin', methods: ['*'] },
+  ], config.apiPrefix));
 
   app.use(bodyParser.json());
   app.use(config.apiPrefix, routes());  // Adds routing

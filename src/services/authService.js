@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('@/config');
 const User = require('@/models/user');
-const {adminUser} = require("../config");
 
 const comparePasswords = (password, encryptedPassword) => {
  return new Promise((resolve, reject) => {
@@ -51,7 +50,6 @@ module.exports = {
         admin.role = 'admin';
         await admin.save();
 
-        console.log(admin);
         resolve();
       } else {
         admin = new User({
