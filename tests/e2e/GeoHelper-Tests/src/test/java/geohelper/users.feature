@@ -3,7 +3,7 @@ Feature: User API
   Background:
     * url baseUrl
 
-  Scenario: User tries to login three times (2 are failed)Given path 'auth'
+  Scenario: User tries to login three times (2 are failed)
     Given path 'auth'
     * def emptyUser = {}
     And request emptyUser
@@ -15,7 +15,6 @@ Feature: User API
     And request invalidUser
     When method post
     Then status 401
-
 
     Given path 'auth'
     * def validUser = { username: 'test', password: 'test123' }

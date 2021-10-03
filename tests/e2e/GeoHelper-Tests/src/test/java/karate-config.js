@@ -17,6 +17,7 @@ function fn() {
 
   // Setting access token
   config.accessToken = 'Bearer ' + karate.callSingle('classpath:geohelper/users.feature', config).token;
+//  config.accessToken = 'Bearer ';
 
   return config;
 }
