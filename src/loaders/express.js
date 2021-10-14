@@ -8,6 +8,7 @@ const upload = require('../middleware/upload');
 
 const config = require('../config');
 const routes = require('@/api');
+const path = require("path");
 
 /**
  *
@@ -23,6 +24,9 @@ module.exports = async (app) => {
 
   app.enable('trust proxy');
   app.use(cors());
+
+  console.log(`${config.uploadDir}`);
+  app.use(`/${path.basename(config.uploadDir)}`, express.static(config.uploadDir));
 
   app.use(security(config.secret, [
     { route: '/objects', role: 'user', methods: ['GET'] },
