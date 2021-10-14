@@ -25,7 +25,7 @@ In the end, run `npm install` to install all required dependencies.
 
 ## Building
 
-To run this application run `node services`.
+To run this application run `npm start`.
 
 ## API Documentation
 
