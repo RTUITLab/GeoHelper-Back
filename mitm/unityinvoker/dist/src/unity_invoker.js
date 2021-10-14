@@ -19,7 +19,6 @@ function runUnityProcess(options, logger) {
     return __awaiter(this, void 0, void 0, function* () {
         //=> Generating an argv array from the arguments object
         const argv = toArgv(options);
-        argv.push('-force-free')
         console.log(argv.join(' '));
         //=> Spawn Unity process
         const unityProcess = child_process_1.spawn(yield unity_finder_1.getUnityPath(), argv);

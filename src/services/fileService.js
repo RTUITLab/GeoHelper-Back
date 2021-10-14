@@ -76,18 +76,18 @@ module.exports = {
           console.log(paths);
           console.log(path.resolve(config.uploadDir, dirName) + '.android.assetbundle');
 
-          console.log(await Promise.all([
-            bundle(...paths)
+          console.log([
+            await bundle(...paths)
               .targeting('Android')
               .withLogger(message => console.log(message))
               .withUnityLogger(message => console.log('UNITY: ' + message))
               .to(path.resolve(config.uploadDir, dirName) + '.android.assetbundle'),
-            bundle(...paths)
+            await bundle(...paths)
               .targeting('iOS')
               .withLogger(message => console.log(message))
               .withUnityLogger(message => console.log('UNITY: ' + message))
               .to(path.resolve(config.uploadDir, dirName) + '.ios.assetbundle')
-          ]));
+          ]);
 
           Promise.all([
             fs.rm(path.join(os.tmpdir(), dirName + '.ios'), { recursive: true, force: true}),
