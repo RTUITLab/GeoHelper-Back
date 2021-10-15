@@ -46,6 +46,16 @@ module.exports = {
     });
   },
 
+  updateEntity: (reqEntity) => {
+    return new Promise(async (resolve, reject) => {
+      if (await Entity.updateOne({ _id: reqEntity._id }, reqEntity)) {
+        resolve(reqEntity);
+      } else {
+        reject({ message: `Can't update entity` });
+      }
+    });
+  },
+
   deleteEntity: (id) => {
     return new Promise(async (resolve, reject) => {
       Entity.findByIdAndRemove(id, (error) => {
