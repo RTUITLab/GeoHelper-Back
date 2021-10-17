@@ -59,6 +59,8 @@ module.exports = {
 
           await fs.mkdir(path.resolve(config.uploadDir, dirName));
           const paths = await extractFiles(zip, dirName);
+
+          resolve();
           // Object.keys(zip.files).forEach((unzippedFile) => {
           //   if (zip.file(unzippedFile) && !zip.file(unzippedFile).dir) {
           //     paths.push(path.resolve(config.uploadDir, dirName, unzippedFile));
