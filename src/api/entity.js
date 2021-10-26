@@ -16,6 +16,17 @@ router.post('/', Validators.createObject, async (req, res) => {
   }
 });
 
+router.put('/', Validators.createObject, async (req, res) => {
+  try {
+    await entityService.updateEntity(req.entity);
+
+    res.status(200).json(req.entity);
+  } catch (e) {
+    console.error(e);
+    res.status(400).json({ success: false, message: e.message });
+  }
+});
+
 router.delete('/', Validators.deleteObject, async (req, res) => {
   try {
     await entityService.deleteEntity(req.body._id);

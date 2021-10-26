@@ -1,9 +1,13 @@
+!mitm/
 # Dockerfile
 uploads
 .env.local
 node_modules
+tests/e2e/GeoHelper-Tests/.idea
+tests/e2e/GeoHelper-Tests/target
 
 .idea
 
 Unity_v2019.x.ulf
-AssetBundleCompiler
+/AssetBundleCompiler
+

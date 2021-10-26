@@ -34,6 +34,7 @@ const checkEntity = (body) => {
     }
 
     const entity = {
+      _id: body._id,
       name: body.name,
       type: body.type,
       position: body.position,

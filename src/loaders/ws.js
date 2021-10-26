@@ -24,7 +24,7 @@ module.exports = async (app) => {
       try {
         const data = await entityService.getObjectsForPoint(point);
 
-        ws.send(JSON.stringify(JSON.stringify(data)));
+        ws.send(JSON.stringify(data));
       } catch (e) {
         ws.send(JSON.stringify({ success: false, message: e.message }))
       }
