@@ -22,6 +22,16 @@ module.exports = (app) => {
     }
   });
 
+  app.delete('/upload', async (req, res) => {
+    try {
+      const files = await fileService.deleteAllFilesData();
+
+      res.status(200).json(files);
+    } catch (e) {
+      res.status(400).json({ success: false, message: e.message });
+    }
+  });
+
   app.delete('/delete_file', Validators.deleteFile, async (req, res) => {
     try {
       await fileService.removeFile(req.body.url);

@@ -173,4 +173,16 @@ module.exports = {
       });
     });
   },
+
+  deleteAllFilesData: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const count = await mgFile.deleteMany({});
+        resolve(count);
+      } catch (e) {
+        console.log(e);
+        reject({ message: `Can't delete data from DB`});
+      }
+    });
+  },
 }
