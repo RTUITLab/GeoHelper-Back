@@ -1,58 +1,48 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
-// ReSharper disable once UnusedMember.Global, CheckNamespace
-public static class AssetBundleCompiler
+public class AssetBundleCompiler : MonoBehaviour
 {
+    private static GLTFast.GltfImport gltf;
+
+    [MenuItem("Assets/Build AssetBundle")]
     public static void Convert()
     {
         //=> Retrieve CLI arguments
         var args = GetCommandLineArgs();
 
-        var assetNames = args["cAssetNames"];
         var assetBundleDirectory = args["cAssetBundleDirectory"][0];
         var assetBundleName = args["cAssetBundleName"][0];
-        var assetBundleBuildOptions = args["cAssetBundleBuildOptions"];
-        var assetBundleTargetName = args["cAssetBundleTarget"][0];
 
         //=> Parametrize our build
         var ds = Path.DirectorySeparatorChar;
 
-        var build = new AssetBundleBuild {
-            assetBundleName = assetBundleName,
-            assetNames = assetNames.Select(assetName => "Assets" + ds + "CopiedAssets" + ds + assetName).ToArray()
-        };
+        var dirInfo = new DirectoryInfo($"Assets/Generated");
 
-        var builds = new[] { build };
+        var files = dirInfo.GetFiles("*.*", SearchOption.AllDirectories).ToList().FindAll(file => file.Extension != ".meta");
+        LinkedList<string> paths = new LinkedList<string>();
 
-        //=> Convert build options strings to a BuildAssetBundleOptions mask
-        var buildOptions = GetBuildOptionsMaskFromStrings(assetBundleBuildOptions);
-
-        //=> Convert build target name to Unity's BuildTarget enum
-        var buildTarget = StringToEnum<BuildTarget>(assetBundleTargetName);
-
-        //=> Start asset bundling
-        BuildPipeline.BuildAssetBundles(assetBundleDirectory, builds, buildOptions, buildTarget);
-    }
-
-    private static BuildAssetBundleOptions GetBuildOptionsMaskFromStrings(IEnumerable<string> options)
-    {
-        return options.Aggregate(
-            BuildAssetBundleOptions.None,
-            (current, option) => current | StringToEnum<BuildAssetBundleOptions>(option)
-        );
-    }
-
-    private static T StringToEnum<T>(string enumMemberName)
-    {
-        try {
-            return (T)Enum.Parse(typeof(T), enumMemberName, true);
-        } catch (ArgumentException ex) {
-            throw new Exception("Invalid member name " + enumMemberName + " for enum " + typeof(T).Name, ex);
+        foreach (var file in files)
+        {
+            paths.AddLast("Assets" + file.FullName.Split(new string[] { "Assets" }, StringSplitOptions.None)[1]);
         }
+
+        // Create assetbundles build maps for different platforms
+        AssetBundleBuild[] andriodBuildMap = createBuildMap(assetBundleName + ".android", paths);
+        AssetBundleBuild[] iosBuildMap = createBuildMap(assetBundleName + ".ios", paths);
+
+        Debug.Log("Build android");
+        BuildPipeline.BuildAssetBundles(assetBundleDirectory, andriodBuildMap, BuildAssetBundleOptions.None, BuildTarget.Android);
+        Debug.Log("Build android");
+        BuildPipeline.BuildAssetBundles(assetBundleDirectory, iosBuildMap, BuildAssetBundleOptions.None, BuildTarget.iOS);
+
+        Debug.Log("FINISHED_BUILDING");
     }
 
     private static Dictionary<string, List<string>> GetCommandLineArgs()
@@ -60,7 +50,8 @@ public static class AssetBundleCompiler
         var args = Environment.GetCommandLineArgs();
         var argsDict = new Dictionary<string, List<string>>();
 
-        for (var i = 0; i < args.Length; i++) {
+        for (var i = 0; i < args.Length; i++)
+        {
             if (!args[i].StartsWith("-")) continue;
 
             var argName = args[i].Substring(1);
@@ -68,11 +59,20 @@ public static class AssetBundleCompiler
 
             argsDict[argName] = argValues;
 
-            while (i + 1 < args.Length && !args[i + 1].StartsWith("-")) {
+            while (i + 1 < args.Length && !args[i + 1].StartsWith("-"))
+            {
                 argValues.Add(args[++i]);
             }
         }
 
         return argsDict;
+    }
+
+    public static AssetBundleBuild[] createBuildMap(string title, LinkedList<string> paths)
+    {
+        AssetBundleBuild[] buildMap = new AssetBundleBuild[1];
+        buildMap[0].assetBundleName = title;
+        buildMap[0].assetNames = paths.ToArray();
+        return buildMap;
     }
 }

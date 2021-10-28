@@ -24,13 +24,12 @@ class AssetsBundler {
         this.logger = unityinvoker_1.logger.noopLogger;
         this.unityLogger = unityinvoker_1.logger.noopLogger;
         this.editorScriptsStreams = [];
-        this.assetsStreams = [];
         this.buildOptions = new Set();
         this.state = BundlerState.Configuring;
     }
-    includingAssets(...assets) {
+    includingAssets(pathToAssets) {
         this.checkBundlerIsntAlreadyConfigured();
-        assets.map(streamMaker.normalizeReadStream).forEach(stream => this.assetsStreams.push(stream));
+        this.assetsPath = pathToAssets;
         return this;
     }
     targeting(buildTarget) {
@@ -73,12 +72,11 @@ class AssetsBundler {
             const defaultedOptions = Object.assign({ overwrite: true }, options);
             this.state = BundlerState.Bundling;
             //=> Normalize destinations to writable streams
-            const fileStream = streamMaker.normalizeWriteStream(file);
-            const fileName = path.basename(fileStream.path.toString());
-            const hasManifest = !!defaultedOptions.manifestFile;
-            const manifestStream = hasManifest ? streamMaker.normalizeWriteStream(defaultedOptions.manifestFile) : null;
+            const fileStreamIos = streamMaker.normalizeWriteStream(file + '.ios');
+            const fileStreamAnd = streamMaker.normalizeWriteStream(file + '.android');
+            console.log('FILE_STREAM_IOS: ' + file + '.ios');
             //=> Create the build context (contains infos about the paths used by the current build)
-            const buildContext = new build_context_1.BuildContext(fileName);
+            const buildContext = new build_context_1.BuildContext(path.basename(file));
             //=> Handle abrupt process terminations
             const signalCleanup = this.signalCleanup.bind(this, buildContext);
             process.on('SIGINT', signalCleanup);
@@ -92,29 +90,30 @@ class AssetsBundler {
                 yield unityproj.cleanupProject(buildContext);
                 this.logger('Warmup');
                 yield unityproj.warmupProject(buildContext);
-                this.logger('Stop');
+                this.logger('Project created');
 
                 //=> Copy original assets and scripts into the project (Unity limitation)
                 //-----------------------------------------------------------------------
                 this.logger(`Copying assets to ${buildContext.assetsDir}`);
-                yield unityproj.copyAssetsInProject(buildContext, this.assetsStreams);
+                yield unityproj.copyAssetsInProject(buildContext, this.assetsPath);
                 this.logger(`Copying custom editor scripts to ${buildContext.editorScriptsDir}`);
                 yield unityproj.copyEditorScriptsInProject(buildContext, this.editorScriptsStreams);
                 //=> Generate the asset bundle
                 //----------------------------
                 this.logger(`Generating asset bundle in ${buildContext.assetBundleDir}`);
-                manifest = yield unityproj.generateAssetBundle(buildContext, this.assetsStreams, this.buildOptions, this.buildTarget, this.unityLogger, assetPath => this.logger(`Updating resource: ${assetPath}`));
+                yield unityproj.generateAssetBundle(buildContext, this.buildOptions, this.buildTarget, this.unityLogger, assetPath => this.logger(`Updating resource: ${assetPath}`));
                 //=> Move the generated asset bundle to the final dest
                 //----------------------------------------------------
                 this.logger(`Moving asset bundle to target destination`);
-                yield unityproj.moveGeneratedAssetBundle(buildContext, fileStream, manifestStream, defaultedOptions.overwrite);
+                yield unityproj.moveGeneratedAssetBundle(buildContext, fileStreamIos, null, defaultedOptions.overwrite, 'iOS');
+                yield unityproj.moveGeneratedAssetBundle(buildContext, fileStreamAnd, null, defaultedOptions.overwrite, 'Android');
             }
             finally {
                 //=> Success or error doesn't matter, we have to cleanup!
                 //-------------------------------------------------------
                 process.removeListener('SIGINT', signalCleanup);
                 process.removeListener('SIGTERM', signalCleanup);
-                yield this.cleanup(buildContext);
+                // yield this.cleanup(buildContext);
             }
             //=> OK.
             //------

@@ -1,4 +1,6 @@
 const Entity = require('../models/entity');
+const mgFile = require('../models/file');
+const fileService = require('./fileService');
 
 const checkInclusion = (latLng, lines) => {
   let inside = false;
@@ -58,11 +60,20 @@ module.exports = {
 
   deleteEntity: (id) => {
     return new Promise(async (resolve, reject) => {
+      const entity = await Entity.findById(id);
       Entity.findByIdAndRemove(id, (error) => {
         if (error) {
           console.error(error);
           reject({ message: `Can't delete object` });
         } else {
+          if (entity.type === 'audio' || entity.type === 'excursion') {
+            const filename = entity.files.find((file) => file.type === 'audio').url.split('/').pop();
+            fileService.removeFile(filename);
+          }
+          if (entity.type === 'object' || entity.type === 'excursion') {
+            const filename = entity.files.find((file) => file.type === 'model').url.split('/').pop();
+            fileService.removeFile(filename);
+          }
           resolve();
         }
       });
@@ -72,6 +83,8 @@ module.exports = {
   getObjectsForPoint: (point) => {
     return new Promise(async (resolve, reject) => {
       const entities = await Entity.find({});
+      const readyFiles = await mgFile.find({bundled: true});
+
       if (!entities) {
         return resolve({ message: `Can't get entities`});
       }
@@ -100,9 +113,25 @@ module.exports = {
           } else if (entity.type === 'audio') {
             geoAudioObjectModels.push(entity);
           } else if (entity.type === 'object') {
-            geo3dObjectModels.push(entity);
+            const filename = entity.files[0].url.split('/').pop().split('.')[0];
+            if (readyFiles.find((file) => file.name === filename)) {
+              entity.files[0].assetBundle = entity.files[0].url.split('.zip')[0];
+              geo3dObjectModels.push(entity);
+            }
           } else if (entity.type === 'excursion') {
-            geoExcursionObjectModels.push(entity);
+            const filename = entity.files.find((file) => file.type === 'model').url.split('/').pop().split('.')[0];
+            if (readyFiles.find((file) => file.name === filename)) {
+              entity.files = entity.files.map((file) => {
+                const newFile = JSON.parse(JSON.stringify(file));
+
+                if (newFile.type === 'model') {
+                  newFile.assetBundle = newFile.url.split('.zip')[0];
+                }
+
+                return newFile;
+              });
+              geoExcursionObjectModels.push(entity);
+            }
           }
         }
       });
