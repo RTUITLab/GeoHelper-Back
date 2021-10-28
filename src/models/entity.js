@@ -37,6 +37,9 @@ const Schema = mongoose.Schema({
       },
       url: {
         type: String
+      },
+      assetBundle: {
+        type: String
       }
     }
   ],

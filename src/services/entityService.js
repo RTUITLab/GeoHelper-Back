@@ -1,4 +1,5 @@
 const Entity = require('../models/entity');
+const mgFile = require('../models/file');
 
 const checkInclusion = (latLng, lines) => {
   let inside = false;
@@ -72,6 +73,8 @@ module.exports = {
   getObjectsForPoint: (point) => {
     return new Promise(async (resolve, reject) => {
       const entities = await Entity.find({});
+      const readyFiles = await mgFile.find({bundled: true});
+
       if (!entities) {
         return resolve({ message: `Can't get entities`});
       }
@@ -100,9 +103,15 @@ module.exports = {
           } else if (entity.type === 'audio') {
             geoAudioObjectModels.push(entity);
           } else if (entity.type === 'object') {
-            geo3dObjectModels.push(entity);
+            const filename = entity.files[0].url.split('/').pop().split('.')[0];
+            if (readyFiles.find((file) => file.name === filename)) {
+              geo3dObjectModels.push(entity);
+            }
           } else if (entity.type === 'excursion') {
-            geoExcursionObjectModels.push(entity);
+            const filename = entity.files.find((file) => file.type === 'model').url.split('/').pop().split('.')[0];
+            if (readyFiles.find((file) => file.name === filename)) {
+              geoExcursionObjectModels.push(entity);
+            }
           }
         }
       });
