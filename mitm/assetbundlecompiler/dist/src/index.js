@@ -10,7 +10,7 @@ var unityinvoker_1 = require("@mitm/unityinvoker");
 exports.setUnityPath = unityinvoker_1.setUnityPath;
 exports.UnityCrashError = unityinvoker_1.UnityCrashError;
 __export(require("./assets_bundler"));
-function bundle(...assets) {
-    return new assets_bundler_1.AssetsBundler().includingAssets(...assets);
+function bundle(pathToAssets) {
+    return new assets_bundler_1.AssetsBundler().includingAssets(pathToAssets);
 }
 exports.bundle = bundle;

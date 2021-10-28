@@ -37,11 +37,11 @@ export declare class AssetsBundler {
     private logger;
     private unityLogger;
     private editorScriptsStreams;
-    private assetsStreams;
     private buildOptions;
     private buildTarget;
     private state;
-    includingAssets(...assets: streamMaker.ReadableFileInput[]): this;
+    private assetsPath;
+    includingAssets(pathToAssets): this;
     targeting(buildTarget: unityproj.BuildTarget): this;
     withLogger(loggerFn: logger.SimpleLogger): this;
     withUnityLogger(unityLogger: logger.SimpleLogger): this;

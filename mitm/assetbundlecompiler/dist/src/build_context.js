@@ -7,6 +7,8 @@ class BuildContext {
     constructor(assetBundleName) {
         const ProjectDirectory = path.join(os.tmpdir(), assetBundleName.split('.assetbundle')[0]);
 
+        console.log('PROJECT_DIRECTORY: ' + ProjectDirectory);
+
         this.assetBundleName = assetBundleName;
         this.projectRootDir = ProjectDirectory;
         this.assetsDir = path.resolve(`${ProjectDirectory}/Assets/CopiedAssets`);

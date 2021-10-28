@@ -9,13 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fsx = require("fs-extra");
-const jsyaml = require("js-yaml");
 const os = require("os");
 const path = require("path");
 const unity = require("./unity_invoker");
 exports.ProjectDirectory = path.join(os.tmpdir(), 'AssetBundleCompiler');
 const CompilerScriptSource = path.resolve(`${__dirname}/../../resources/AssetBundleCompiler.cs`);
-const CompilerScriptDest = path.resolve(`${exports.ProjectDirectory}/Assets/Editor/AssetBundleCompiler.cs`);
 function shouldCreateProject(projectDir) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -38,8 +36,11 @@ exports.copyEditorScript = copyEditorScript;
 function warmupProject(context) {
     return __awaiter(this, void 0, void 0, function* () {
         if (yield shouldCreateProject(context.projectRootDir)) {
-            yield unity.createProject(context.projectRootDir);
-            yield copyEditorScript(context.projectRootDir);
+            yield fsx.mkdir(context.projectRootDir);
+            yield fsx.copy(path.join(os.tmpdir(), 'ProjectTemplate'), context.projectRootDir);
+
+            // yield unity.createProject(context.projectRootDir);
+            // yield copyEditorScript(context.projectRootDir);
         }
         yield fsx.mkdir(context.editorScriptsDir);
         yield fsx.mkdir(context.assetsDir);
@@ -53,22 +54,22 @@ function copyEditorScriptsInProject(context, scriptsStreams) {
     });
 }
 exports.copyEditorScriptsInProject = copyEditorScriptsInProject;
-function copyAssetsInProject(context, assetStreams) {
+function copyAssetsInProject(context, assetsPath) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield copyStreamsInDirectory(assetStreams, context.assetsDir);
+        yield fsx.copy(assetsPath, context.assetsDir);
+        // yield copyStreamsInDirectory(assetStreams, context.assetsDir);
     });
 }
 exports.copyAssetsInProject = copyAssetsInProject;
-function generateAssetBundle(context, fileStreams, buildOptions, buildTarget, unityLogger, signalAssetProcessed) {
+function generateAssetBundle(context, buildOptions, buildTarget, unityLogger, signalAssetProcessed) {
     return __awaiter(this, void 0, void 0, function* () {
-        const assetNames = fileStreams.map(fileStream => path.basename(fileStream.path));
-        yield unity.generateAssetBundle(context.projectRootDir, assetNames, context.assetBundleDir, context.assetBundleName, buildOptions, buildTarget, unityLogger, signalAssetProcessed);
-        const manifestBuf = yield fsx.readFile(context.assetBundleManifestPath);
-        return jsyaml.safeLoad(manifestBuf.toString());
+        yield unity.generateAssetBundle(context.projectRootDir, [], context.assetBundleDir, context.assetBundleName, buildOptions, buildTarget, unityLogger, signalAssetProcessed);
+        // const manifestBuf = yield fsx.readFile(context.assetBundleManifestPath);
+        // return jsyaml.safeLoad(manifestBuf.toString());
     });
 }
 exports.generateAssetBundle = generateAssetBundle;
-function moveGeneratedAssetBundle(context, finalDest, finalManifestDest, overwrite) {
+function moveGeneratedAssetBundle(context, finalDest, finalManifestDest, overwrite, target) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!overwrite) {
             try {
@@ -78,12 +79,9 @@ function moveGeneratedAssetBundle(context, finalDest, finalManifestDest, overwri
             finally { }
         }
         const tasks = [];
-        const assetBundleStream = fsx.createReadStream(context.assetBundlePath);
+        console.log('ASSET_BUNDLE_STREAM: ' + context.assetBundlePath + (target === 'iOS' ? '.ios' : '.android'));
+        const assetBundleStream = fsx.createReadStream(context.assetBundlePath + (target === 'iOS' ? '.ios' : '.android'));
         tasks.push(copyReadableToWritableStream(assetBundleStream, finalDest));
-        if (finalManifestDest) {
-            const manifestStream = fsx.createReadStream(context.assetBundleManifestPath);
-            tasks.push(copyReadableToWritableStream(manifestStream, finalManifestDest));
-        }
         yield Promise.all(tasks);
     });
 }

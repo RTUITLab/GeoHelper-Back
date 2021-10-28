@@ -4,4 +4,4 @@ import { ReadableFileInput } from './stream_maker';
 export { setUnityPath, UnityCrashError } from '@mitm/unityinvoker';
 export * from './assets_bundler';
 export { BuildTargets };
-export declare function bundle(...assets: ReadableFileInput[]): AssetsBundler;
+export declare function bundle(pathToAssets: String): AssetsBundler;
