@@ -1,5 +1,6 @@
 const Entity = require('../models/entity');
 const mgFile = require('../models/file');
+const fileService = require('./fileService');
 
 const checkInclusion = (latLng, lines) => {
   let inside = false;
@@ -59,11 +60,20 @@ module.exports = {
 
   deleteEntity: (id) => {
     return new Promise(async (resolve, reject) => {
+      const entity = await Entity.findById(id);
       Entity.findByIdAndRemove(id, (error) => {
         if (error) {
           console.error(error);
           reject({ message: `Can't delete object` });
         } else {
+          if (entity.type === 'audio' || entity.type === 'excursion') {
+            const filename = entity.files.find((file) => file.type === 'audio').url.split('/').pop();
+            fileService.removeFile(filename);
+          }
+          if (entity.type === 'object' || entity.type === 'excursion') {
+            const filename = entity.files.find((file) => file.type === 'model').url.split('/').pop();
+            fileService.removeFile(filename);
+          }
           resolve();
         }
       });

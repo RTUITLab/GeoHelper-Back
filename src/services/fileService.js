@@ -1,6 +1,5 @@
 const fs = require('fs/promises');
-const { mkdirSync, writeFileSync } = require('fs');
-const os = require('os');
+const { mkdirSync } = require('fs');
 const path = require('path');
 const JSZip = require('jszip');
 
@@ -133,12 +132,25 @@ module.exports = {
       if (ext === 'zip') {
         try {
           await fs.stat(path.resolve(config.uploadDir, dirName));
+          const fileData = await mgFile.findOne({name: dirName});
 
           try {
-            await fs.rm(path.resolve(config.uploadDir, dirName), { recursive: true, force: true});
+            if (fileData.unzipped) {
+              await fs.rm(path.resolve(config.uploadDir, dirName), { recursive: true, force: true});
+            }
           } catch (e) {
             console.error(e);
-            return reject({message: `Can't unzipped files`});
+            return reject({message: `Can't delete unzipped files`});
+          }
+
+          try {
+            if (fileData.bundled) {
+              await fs.rm(path.resolve(config.uploadDir, dirName + '.ios'), { recursive: true, force: true});
+              await fs.rm(path.resolve(config.uploadDir, dirName + '.android'), { recursive: true, force: true});
+            }
+          } catch (e) {
+            console.error(e);
+            return reject({message: `Can't delete unzipped files`});
           }
         } catch (e) {
           console.error(e);
