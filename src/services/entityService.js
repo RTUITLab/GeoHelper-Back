@@ -105,11 +105,21 @@ module.exports = {
           } else if (entity.type === 'object') {
             const filename = entity.files[0].url.split('/').pop().split('.')[0];
             if (readyFiles.find((file) => file.name === filename)) {
+              entity.files[0].assetBundle = entity.files[0].url.split('.zip')[0];
               geo3dObjectModels.push(entity);
             }
           } else if (entity.type === 'excursion') {
             const filename = entity.files.find((file) => file.type === 'model').url.split('/').pop().split('.')[0];
             if (readyFiles.find((file) => file.name === filename)) {
+              entity.files = entity.files.map((file) => {
+                const newFile = JSON.parse(JSON.stringify(file));
+
+                if (newFile.type === 'model') {
+                  newFile.assetBundle = newFile.url.split('.zip')[0];
+                }
+
+                return newFile;
+              });
               geoExcursionObjectModels.push(entity);
             }
           }
