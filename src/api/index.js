@@ -20,7 +20,8 @@ module.exports = () => {
   authApi(app);
   entityApi(app);
   fileApi(app);
-  unityLicenseApi(app)
+  directionsApi(app);
+  unityLicenseApi(app);
 
   return app;
 }
