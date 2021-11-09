@@ -32,7 +32,7 @@ module.exports = {
 
       comparePasswords(user.password, foundUser.password)
         .then(() => {
-          const accessToken = jwt.sign({ user: foundUser.username, role: foundUser.role }, config.secret);
+          const accessToken = jwt.sign({ _id: foundUser._id, user: foundUser.username, role: foundUser.role }, config.secret);
           resolve({ token: accessToken, foundUser });
         })
         .catch(() => {
