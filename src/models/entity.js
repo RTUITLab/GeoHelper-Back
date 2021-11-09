@@ -10,6 +10,10 @@ const Schema = mongoose.Schema({
     required: true,
     enum: ['text', 'object', 'audio', 'excursion']
   },
+  creator: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User'
+  },
   description: String,
   position: {
     lat: {
@@ -34,6 +38,10 @@ const Schema = mongoose.Schema({
       },
       fileName: {
         type: String
+      },
+      fileId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'File'
       },
       url: {
         type: String
