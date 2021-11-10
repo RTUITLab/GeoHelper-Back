@@ -5,3 +5,19 @@ services:
     build: .
     ports:
     - 3001:3001
+    environment:
+    - M_USER=admin
+    - M_PASS=root
+    - M_HOST=mongo
+    - M_PORT=27017
+    - M_DB=geohelper
+    - M_SECRET=geohelpersecret
+    - A_USER=test
+    - A_PASS=test123
+    - PORT=3001
+    - UPLOAD_DIR=uploads
+  mongo:
+    image: mongo
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=admin
+    - MONGO_INITDB_ROOT_PASSWORD=root
