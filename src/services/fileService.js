@@ -106,7 +106,7 @@ module.exports = {
         }
       }
 
-      resolve();
+      resolve(dbFile._id);
 
       // Delete file if not used in any entity after timeout
       setTimeout(async () => {
@@ -165,6 +165,7 @@ module.exports = {
         }
       }
 
+      await mgFile.deleteOne({ name: dirName });
       resolve();
     });
   },
