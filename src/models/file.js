@@ -5,6 +5,9 @@ const Schema = mongoose.Schema({
     type: String,
     require: true
   },
+  type: {
+    type: String
+  },
   creator: {
     type: mongoose.Types.ObjectId,
     ref: 'User'
@@ -18,7 +21,7 @@ const Schema = mongoose.Schema({
     require: true
   },
   inQueue: {
-    type: Number,
+    type: Boolean,
     require: false
   },
 });

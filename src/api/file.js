@@ -4,9 +4,9 @@ const fileService = require('../services/fileService');
 module.exports = (app) => {
   app.post('/upload', Validators.uploadFile, async (req, res) => {
     try {
-      await fileService.processFile(req.file.filename);
+      const fileId = await fileService.processFile(req.file.filename, req.user);
 
-      res.status(201).json({ success: true, message: 'File created', name: req.file.filename });
+      res.status(201).json({ success: true, message: 'File created', name: req.file.filename, _id: fileId });
     } catch (e) {
       res.status(400).json({ success: false, message: e.message });
     }
