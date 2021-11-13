@@ -4,9 +4,9 @@ const path = require('path');
 const JSZip = require('jszip');
 
 const config = require('../config');
-const {setUnityPath, bundle} = require("../../mitm/assetbundlecompiler");
 const mgFile = require('../models/file');
 const Entity = require('../models/entity');
+const assetBundleService = require('./assetBundleService');
 
 const extractFiles = async (zip, dirName) => {
   const paths = [];
@@ -28,7 +28,7 @@ const extractFiles = async (zip, dirName) => {
   } catch (e) {
     await Promise.reject(e);
   }
-  console.log(`Extracted ${paths.length} files (${dirName})`);
+  console.log('\x1b[33m%s\x1b[0m', `${dirName}: Extracted ${paths.length} files`);
 
   return paths;
 }
@@ -56,7 +56,7 @@ module.exports = {
         inQueue: false
       });
       await dbFile.save();
-        console.log('FILE SAVED');
+      console.log('\x1b[33m%s\x1b[0m', `${dbFile.name}: FILE SAVED`);
 
       if (ext === 'zip') {
         try {
@@ -67,39 +67,14 @@ module.exports = {
           await fs.mkdir(path.resolve(config.uploadDir, dirName));
           const paths = await extractFiles(zip, dirName);
           if (paths.find((item) => item.indexOf('scene.gltf') !== -1)) {
-            console.log(`Scene file found (${dirName})`);
+            console.log('\x1b[33m%s\x1b[0m', `${dbFile.name}: Scene file found`);
           } else {
             throw new Error('Uncorrect zip');
           }
 
           dbFile.unzipped = true;
           await dbFile.save();
-          console.log('FILE UNZIPPED');
-
-          // TODO: Move to another method
-          /*
-          // Create assetbundle
-          setUnityPath(process.env.UNITY_PATH);
-          console.log(paths);
-
-          console.log([
-            await bundle(path.resolve(config.uploadDir, dirName))
-              .targeting('All')
-              .withLogger(message => console.log(message))
-              .withUnityLogger(message => console.log(`Unity: ${message}`))
-              .to(path.resolve(config.uploadDir, dirName))
-          ]);
-
-          dbFile.bundled = true;
-          await dbFile.save();
-          console.log('FILE BUNDLED');
-
-          Promise.all([
-            // fs.rm(path.join(os.tmpdir(), dirName + '.ios'), { recursive: true, force: true}),
-          ]).then(() => {
-            console.log(`${dirName} unity projects have been removed.`);
-          });
-        */
+          console.log('\x1b[33m%s\x1b[0m', `${dbFile.name}: FILE UNZIPPED`);
         } catch (e) {
           console.error(e);
           return reject({ message: `Can't unzip file` });
@@ -117,6 +92,10 @@ module.exports = {
         }
       }, 10000);
     });
+  },
+
+  createAssetBundle: (fileId) => {
+    assetBundleService.addToQueue(fileId);
   },
 
   removeFile: (filename) => {
