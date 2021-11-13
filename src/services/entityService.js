@@ -25,11 +25,48 @@ const checkInclusion = (latLng, lines) => {
 module.exports = {
   getAllObjects: () => {
     return new Promise(async (resolve, reject) => {
-      Entity.find({}, (error, result) => {
+      Entity.find({}, async (error, result) => {
         if (error) {
           console.log(error);
           reject({ message: `Can't get data from DB`});
         } else {
+          const readyFiles = await mgFile.find({bundled: true});
+
+          result = result.map((R) => {
+            // Status
+            // 0 - ready
+            // 1 - processing
+            // 2 - in queue
+            // 3 - can't create AB
+            // 4 - has no files
+            let status = 0;
+
+            if (R.type === 'object') {
+              const filename = R.files[0].url.split('/').pop().split('.')[0];
+              if (readyFiles.find((file) => file.name === filename)) {
+                R.files[0].assetBundle = R.files[0].url.split('.zip')[0];
+              } else {
+                status = 1;
+              }
+            } else if (R.type === 'excursion') {
+              const filename = R.files.find((file) => file.type === 'model').url.split('/').pop().split('.')[0];
+              if (readyFiles.find((file) => file.name === filename)) {
+                R.files = R.files.map((file) => {
+                  const newFile = JSON.parse(JSON.stringify(file));
+
+                  if (newFile.type === 'model') {
+                    newFile.assetBundle = newFile.url.split('.zip')[0];
+                  }
+
+                  return newFile;
+                });
+              } else {
+                status = 1;
+              }
+            }
+
+            return {...R._doc, status: status};
+          });
           resolve(result || []);
         }
       });
@@ -38,6 +75,20 @@ module.exports = {
 
   addEntity: (reqEntity) => {
     return new Promise(async (resolve, reject) => {
+      if (reqEntity.files) {
+        reqEntity.files.filter((item) => item.type === 'model').forEach(async (item) => {
+          if (item.fileId) {
+            fileService.createAssetBundle(item.fileId);
+          } else {
+            // Old FE support
+            const dirName = item.url.split('/').pop().split('.').shift();
+            const dbFile = await mgFile.findOne({ name: dirName });
+
+            fileService.createAssetBundle(dbFile._id);
+          }
+        });
+      }
+
       const entity = new Entity(reqEntity);
 
       if (await entity.save()) {
