@@ -90,6 +90,7 @@ module.exports = {
   createObject: async (req, res, next) => {
     try {
       req.entity = await checkEntity(req.body);
+      req.entity.creator = req.user._id;
 
       next();
     } catch (e) {

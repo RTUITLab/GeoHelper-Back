@@ -5,6 +5,13 @@ const Schema = mongoose.Schema({
     type: String,
     require: true
   },
+  type: {
+    type: String
+  },
+  creator: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User'
+  },
   unzipped: {
     type: Boolean,
     require: true
@@ -12,6 +19,10 @@ const Schema = mongoose.Schema({
   bundled: {
     type: Boolean,
     require: true
+  },
+  inQueue: {
+    type: Boolean,
+    require: false
   },
 });
 
