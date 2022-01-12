@@ -22,6 +22,20 @@ const checkInclusion = (latLng, lines) => {
   return inside;
 }
 
+const processModels = (files) => {
+  files.filter((item) => item.type === 'model').forEach(async (item) => {
+    if (item.fileId) {
+      fileService.createAssetBundle(item.fileId);
+    } else {
+      // Old FE support
+      const dirName = item.url.split('/').pop().split('.').shift();
+      const dbFile = await mgFile.findOne({ name: dirName });
+
+      fileService.createAssetBundle(dbFile._id);
+    }
+  });
+}
+
 module.exports = {
   getAllObjects: () => {
     return new Promise(async (resolve, reject) => {
@@ -76,17 +90,7 @@ module.exports = {
   addEntity: (reqEntity) => {
     return new Promise(async (resolve, reject) => {
       if (reqEntity.files) {
-        reqEntity.files.filter((item) => item.type === 'model').forEach(async (item) => {
-          if (item.fileId) {
-            fileService.createAssetBundle(item.fileId);
-          } else {
-            // Old FE support
-            const dirName = item.url.split('/').pop().split('.').shift();
-            const dbFile = await mgFile.findOne({ name: dirName });
-
-            fileService.createAssetBundle(dbFile._id);
-          }
-        });
+        processModels(reqEntity.files)
       }
 
       const entity = new Entity(reqEntity);
@@ -101,6 +105,10 @@ module.exports = {
 
   updateEntity: (reqEntity) => {
     return new Promise(async (resolve, reject) => {
+      if (reqEntity.files) {
+        processModels(reqEntity.files)
+      }
+
       if (await Entity.updateOne({ _id: reqEntity._id }, reqEntity)) {
         resolve(reqEntity);
       } else {

@@ -90,7 +90,7 @@ module.exports = {
         if (!entity) {
          this.removeFile(filename);
         }
-      }, 10000);
+      }, 3600000); // Delete file if not used after 1 hour after addition
     });
   },
 
