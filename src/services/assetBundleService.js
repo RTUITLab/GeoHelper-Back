@@ -57,8 +57,12 @@ setInterval(() => {
 }, 1000);
 
 module.exports = {
-  addToQueue: (dirName) => {
+  addToQueue: async (dirName) => {
     queue.push(dirName);
+
+    const dbFile = await mgFile.findById(dirName);
+    dbFile.inQueue = true;
+    dbFile.save();
   },
   getQueue: () => {}
 }
