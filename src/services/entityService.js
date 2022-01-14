@@ -57,9 +57,12 @@ module.exports = {
 
             if (R.type === 'object') {
               const filename = R.files[0].url.split('/').pop().split('.')[0];
+
+              // Find model file for object
               if (readyFiles.find((file) => file.name === filename)) {
                 R.files[0].assetBundle = R.files[0].url.split('.zip')[0];
               } else {
+                // If file not bundled, it is processing
                 status = 1;
               }
             } else if (R.type === 'excursion') {
