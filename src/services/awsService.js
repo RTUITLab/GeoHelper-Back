@@ -1,7 +1,8 @@
 const fs = require('fs');
+const stream = require('stream');
+const mime = require('mime-types');
 
 const aws = require('aws-sdk');
-const stream = require("stream");
 
 let s3;
 
@@ -19,10 +20,27 @@ aws.config.getCredentials((err) => {
   }
 });
 
+
+/**
+ *
+ * @param {String} filename
+ */
+const getPath = (filename) => {
+  const ext = filename.split('.').pop();
+  if (ext === 'ios' || ext === 'android') {
+    return 'AssetBundles';
+  } else if (mime.lookup(filename).indexOf('audio') > -1) {
+    return 'Audio';
+  } else {
+    return 'Models';
+  }
+}
+
 module.exports = {
   uploadToS3: (file, type) => {
+  uploadFileToS3: (file) => {
     let readStream = fs.createReadStream(file.path);
-    let key = type + '/' + file.filename;
+    let key = getPath(file.filename) + '/' + file.filename;
 
     const upload = () => {
       const pass = new stream.PassThrough();
