@@ -38,7 +38,20 @@ const getPath = (filename) => {
 }
 
 module.exports = {
-  uploadToS3: (file, type) => {
+  uploadContentToS3: (filename, content) => {
+    const params = {
+      Bucket: 'geohelper',
+      Key: getPath(filename) + '/' + filename,
+      Body: content
+    };
+    s3.upload(params, (err, d) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+    });
+  },
+
   uploadFileToS3: (file) => {
     let readStream = fs.createReadStream(file.path);
     let key = getPath(file.filename) + '/' + file.filename;
