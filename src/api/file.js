@@ -24,14 +24,6 @@ module.exports = (app) => {
     }
   });
 
-  app.get('/uploads/:filename', async (req, res) => {
-    try {
-      res.redirect(awsService.getFromS3(req.params.filename));
-    } catch (e) {
-      res.status(400).json({ success: false, message: e.message });
-    }
-  });
-
   app.delete('/upload', async (req, res) => {
     try {
       const files = await fileService.deleteAllFilesData();

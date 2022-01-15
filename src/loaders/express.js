@@ -26,7 +26,7 @@ module.exports = async (app) => {
   app.use(cors());
 
   console.log(`${config.uploadDir}`);
-  app.use(`/${path.basename(config.uploadDir)}`, express.static(config.uploadDir));
+  app.use(`/${path.basename(config.uploadDir)}`, upload.staticFiles);
 
   app.use(security(config.secret, [
     { route: '/objects', role: 'user', methods: ['GET'] },
@@ -37,7 +37,7 @@ module.exports = async (app) => {
     { route: '/upload', role: 'admin', methods: ['*']},
   ], config.apiPrefix));
 
-  app.use(upload());
+  app.use(upload.multerUpload());
 
   app.use(bodyParser.json());
   app.use(config.apiPrefix, routes());  // Adds routing
