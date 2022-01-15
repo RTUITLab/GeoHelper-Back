@@ -1,9 +1,13 @@
 const Validators = require('../middleware/validators').file;
 const fileService = require('../services/fileService');
+const awsService = require('../services/awsService');
+
+const fs = require('fs');
 
 module.exports = (app) => {
   app.post('/upload', Validators.uploadFile, async (req, res) => {
     try {
+      awsService.uploadToS3(req.file, 'audio');
       const fileId = await fileService.processFile(req.file.filename, req.user);
 
       res.status(201).json({ success: true, message: 'File created', name: req.file.filename, _id: fileId });
@@ -17,6 +21,14 @@ module.exports = (app) => {
       const files = await fileService.getAllFiles();
 
       res.status(200).json(files);
+    } catch (e) {
+      res.status(400).json({ success: false, message: e.message });
+    }
+  });
+
+  app.get('/uploads/:filename', async (req, res) => {
+    try {
+      res.redirect(awsService.getFromS3('audio/' + req.params.filename));
     } catch (e) {
       res.status(400).json({ success: false, message: e.message });
     }
