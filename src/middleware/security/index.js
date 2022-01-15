@@ -13,7 +13,7 @@ module.exports = (secret, config, apiPrefix) => {
 
   return (req, res, next) => {
     const rule = config.find((R) => req.path.indexOf(R.route) === 0);
-    if (!rule) {
+    if (!rule || rule.role === '*') {
       next();
       return;
     }
