@@ -52,9 +52,9 @@ module.exports = {
     });
   },
 
-  uploadFileToS3: (file) => {
-    let readStream = fs.createReadStream(file.path);
-    let key = getPath(file.filename) + '/' + file.filename;
+  uploadFileToS3: ({ path, filename}) => {
+    let readStream = fs.createReadStream(path);
+    let key = getPath(filename) + '/' + filename;
 
     const upload = () => {
       const pass = new stream.PassThrough();
@@ -80,7 +80,7 @@ module.exports = {
   getFromS3: (key) => {
     const params = {
       Bucket: 'geohelper',
-      Key: key,
+      Key: getPath(key) + '/' + key,
     }
 
     return s3.getSignedUrl('getObject', params);
