@@ -9,6 +9,7 @@ let s3;
 aws.config.getCredentials((err) => {
   if (err) {
     console.log(err);
+    throw err;
   } else {
     s3 = new aws.S3({
       credentials: aws.config.credentials,
@@ -51,7 +52,10 @@ module.exports = {
         Body: pass
       };
       s3.upload(params, (err, d) => {
-        console.log(err);
+        if (err) {
+          console.log(err);
+          throw err;
+        }
       });
 
       return pass;
@@ -59,6 +63,7 @@ module.exports = {
 
     readStream.pipe(upload());
   },
+
   getFromS3: (key) => {
     const params = {
       Bucket: 'geohelper',
