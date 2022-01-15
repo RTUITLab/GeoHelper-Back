@@ -8,6 +8,8 @@ const mgFile = require('../models/file');
 const Entity = require('../models/entity');
 const assetBundleService = require('./assetBundleService');
 
+const awsService = require('./awsService');
+
 const extractFiles = async (zip, dirName) => {
   const paths = [];
 
@@ -20,6 +22,7 @@ const extractFiles = async (zip, dirName) => {
         paths.push(path.resolve(config.uploadDir, dirName, file));
 
         const content = await zip.file(file).async('nodebuffer');
+        awsService.uploadContentToS3(dirName + '/' + file, content);
         await fs.writeFile(path.resolve(config.uploadDir, dirName, file), content);
       } else {
         mkdirSync(path.resolve(config.uploadDir, dirName, file));

@@ -1,9 +1,11 @@
 const Validators = require('../middleware/validators').file;
 const fileService = require('../services/fileService');
+const awsService = require('../services/awsService');
 
 module.exports = (app) => {
   app.post('/upload', Validators.uploadFile, async (req, res) => {
     try {
+      awsService.uploadFileToS3(req.file);
       const fileId = await fileService.processFile(req.file.filename, req.user);
 
       res.status(201).json({ success: true, message: 'File created', name: req.file.filename, _id: fileId });
