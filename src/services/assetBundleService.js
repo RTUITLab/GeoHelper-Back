@@ -5,6 +5,8 @@ const config = require('../config');
 const mgFile = require('../models/file');
 const {setUnityPath, bundle} = require('../../mitm/assetbundlecompiler');
 
+const awsService = require('./awsService');
+
 let queue = [];
 let taskIsFinished = true;
 
@@ -37,6 +39,15 @@ const createAssetBundle = async () => {
       fs.rm(path.join(os.tmpdir(), dbFile.name), { recursive: true, force: true}, () => {}),
     ]).then(() => {
       console.log(`${dbFile.name} unity projects have been removed.`);
+    });
+
+    awsService.uploadFileToS3({
+      path: path.resolve(config.uploadDir, dbFile.name + '.ios'),
+      filename: dbFile.name + '.ios'
+    });
+    awsService.uploadFileToS3({
+      path: path.resolve(config.uploadDir, dbFile.name + '.android'),
+      filename: dbFile.name + '.android'
     });
   } catch (e) {
     console.log(e);
