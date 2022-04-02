@@ -28,5 +28,6 @@ module.exports = {
   googleApiKey,
   dbLink,
   secret,
-  apiPrefix: '/api/v1'
+  apiPrefix: '/api/v1',
+  behaviorConfig: require('./behavior')
 }

@@ -1,3 +1,4 @@
+const behaviorConfig = require('../../config').behaviorConfig;
 const entitiesTypes = ['text', 'object', 'audio', 'excursion'];
 
 const checkEntity = (body) => {
@@ -48,6 +49,7 @@ const checkEntity = (body) => {
       }
       entity.description = body.description;
     }
+
     if (body.type === 'audio' || body.type === 'object') {
       if (!body.url) {
         return reject({ message: 'No file url' });
@@ -64,6 +66,38 @@ const checkEntity = (body) => {
         fileName: body.fileName
       }];
     }
+
+    if (body.type === 'object') {
+      if (body.hasOwnProperty('behaviors') && body.behaviors.length) {
+        let behaviorError = '';
+
+        body.behaviors.forEach((behavior) => {
+          if (!(behavior.hasOwnProperty('conditions') && behavior.conditions.length)) {
+            behaviorError = 'No conditions was found';
+            return;
+          }
+
+          behavior.conditions.forEach((cond) => {
+            if (!behaviorConfig.conditions.find((item) => item === cond)) {
+              behaviorError = `Condition '${cond}' not found`;
+            }
+          });
+
+          if (!behavior.hasOwnProperty('action')) {
+            behaviorError = 'Behavior has no action';
+            return;
+          }
+
+          if (!behaviorConfig.actionsTypes.find(behavior.action.type)) {
+            behaviorError = `'${behavior.action.type}' is a wrong behavior type`;
+            return;
+          }
+
+          // TODO: add each action validation
+        });
+      }
+    }
+
     if (body.type === 'excursion') {
       if (!body.description) {
         return reject({ message: 'No object description' });

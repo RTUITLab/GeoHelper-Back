@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const behaviorConfig = require('../config').behaviorConfig;
+
 const Schema = mongoose.Schema({
   name: {
     type: String,
@@ -68,6 +70,36 @@ const Schema = mongoose.Schema({
       end: {
         lat: Number,
         lng: Number
+      }
+    }
+  ],
+  behaviors: [
+    {
+      type: {
+        type: String
+      },
+      conditions: [
+        {
+          type: String,
+          enum: behaviorConfig.conditions
+        }
+      ],
+      action: {
+        type: {
+          type: String,
+          enum: behaviorConfig.actionsTypes
+        },
+        points: [
+          {
+            lat: Number,
+            lng: Number,
+            audio: {
+              fileName: String,
+              url: String
+            },
+            description: String
+          }
+        ]
       }
     }
   ]
