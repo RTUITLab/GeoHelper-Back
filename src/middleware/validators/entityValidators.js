@@ -95,6 +95,8 @@ const checkEntity = (body) => {
 
           // TODO: add each action validation
         });
+
+        entity.behaviors = behaviorError ? [] : body.behaviors;
       }
     }
 
