@@ -1,3 +1,11 @@
+trigger:
+  branches:
+    include:
+      - "*"
+  tags:
+    include:
+      - "*"
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -6,38 +14,67 @@ resources:
 
 name: $(BuildID)-$(Build.SourceBranchName)
 
-steps:
-- task: Docker@2
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  displayName: Build image for docker hub
-  inputs:
-    containerRegistry: 'rtuitlab connection by admin'
-    repository: 'rtuitlab/geohelper-back'
-    command: 'buildAndPush'
-    Dockerfile: 'Dockerfile'
-    buildContext: '.'
-    tags: |
+variables:
+  ${{ if notIn(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    dockerCommand: build
+    deployService: false
+    deployEnvironment: "no"
+    imageTags: "no"
+    serviceName: "no"
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
+    dockerCommand: buildAndPush
+    deployService: true
+    deployEnvironment: production
+    imageTags: |
       $(Build.BuildId)
       latest
-    addPipelineData: false
-- task: Docker@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Build image for private docker registry
-  inputs:
-    containerRegistry: 'private rtuitlab registry'
-    repository: 'rtuitlab/geohelper-back'
-    command: 'buildAndPush'
-    Dockerfile: 'Dockerfile'
-    buildContext: '.'
-    tags: |
-      $(Build.BuildId)
-      latest
-    addPipelineData: false
-- task: SSH@0
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  displayName: Deploy service
-  inputs:
-    sshEndpoint: 'swarm manager'
-    runOptions: 'commands'
-    commands: 'docker service update --image registry.rtuitlab.dev/rtuitlab/geohelper-back:$(Build.BuildId) geohelper_back --with-registry-auth'
-    readyTimeout: '20000'
+    serviceName: geohelper_back
+
+stages:
+  - stage: buildAndPushDockerImages
+    displayName: Build and push Docker images
+    jobs:
+      - job: buildPublicImage
+        displayName: Build public docker image
+        steps:
+          - task: Docker@2
+            displayName: Build image for docker hub
+            inputs:
+              containerRegistry: 'rtuitlab connection by admin'
+              repository: 'rtuitlab/geohelper-back'
+              command: '${{ variables.dockerCommand }}'
+              Dockerfile: 'Dockerfile'
+              buildContext: '.'
+              tags: ${{ variables.imageTags }}
+              addPipelineData: false
+      - job: buildPrivateImage
+        displayName: Build private docker image
+        steps:
+          - task: Docker@2
+            displayName: Build image for private docker registry
+            inputs:
+              containerRegistry: 'private rtuitlab registry'
+              repository: 'geohelper/back'
+              command: '${{ variables.dockerCommand }}'
+              Dockerfile: 'Dockerfile'
+              buildContext: '.'
+              tags: ${{ variables.imageTags }}
+              addPipelineData: false
+  - stage: UpdateService
+    condition: and(succeeded(), ${{ variables.deployService }})
+    displayName: Update service
+    jobs:
+      - deployment: Deploy
+        environment: ${{ variables.deployEnvironment }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: none
+                - task: SSH@0
+                  displayName: Deploy service
+                  inputs:
+                    sshEndpoint: 'swarm manager'
+                    runOptions: 'commands'
+                    commands: 'docker service update --image registry.rtuitlab.dev/geohelper/back:$(Build.BuildId) ${{ variables.serviceName }} --with-registry-auth'
+                    readyTimeout: '20000'
