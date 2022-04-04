@@ -2,22 +2,22 @@ version: '3.8'
 
 services:
   back:
-    image: registry.rtuitlab.dev/rtuitlab/geohelper-back
+    image: registry.rtuitlab.dev/geohelper/back
     environment:
-    # DB
-    - M_USER=${DB_USERNAME?place mongo username! DB_USERNAME}
-    - M_PASS=${DB_PASSWORD?place mongo password! DB_PASSWORD}
-    - M_HOST=${DB_HOST?place mongo host! DB_HOST}
-    - M_PORT=${DB_PORT-27017}
-    - M_DB=${DB_DB_NAME?place mongo database name! DB_DB_NAME}
-    # APP
-    - M_SECRET=${APP_SECRET?place secret string! APP_SECRET}
-    - A_USER=${APP_USERNAME?place default user name! APP_USERNAME}
-    - A_PASS=${APP_PASSWORD?place default user password! APP_PASSWORD}
-    - GOOGLE_API_KEY=${APP_GOOGLE_API_KEY?place google api key! APP_GOOGLE_API_KEY}
+      # DB
+      - M_USER=${DB_USERNAME?place mongo username! DB_USERNAME}
+      - M_PASS=${DB_PASSWORD?place mongo password! DB_PASSWORD}
+      - M_HOST=${DB_HOST?place mongo host! DB_HOST}
+      - M_PORT=${DB_PORT-27017}
+      - M_DB=${DB_DB_NAME?place mongo database name! DB_DB_NAME}
+      # APP
+      - M_SECRET=${APP_SECRET?place secret string! APP_SECRET}
+      - A_USER=${APP_USERNAME?place default user name! APP_USERNAME}
+      - A_PASS=${APP_PASSWORD?place default user password! APP_PASSWORD}
+      - GOOGLE_API_KEY=${APP_GOOGLE_API_KEY?place google api key! APP_GOOGLE_API_KEY}
 
-    # TODO: use S3 in future
-    - UPLOAD_DIR=uploads
+      # TODO: use S3 in future
+      - UPLOAD_DIR=uploads
     deploy:
       resources:
         limits:
