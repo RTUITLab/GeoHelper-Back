@@ -88,7 +88,7 @@ const checkEntity = (body) => {
             return;
           }
 
-          if (!behaviorConfig.actionsTypes.find(behavior.action.type)) {
+          if (!behaviorConfig.actionsTypes.find((type) => type === behavior.action.type)) {
             behaviorError = `'${behavior.action.type}' is a wrong behavior type`;
             return;
           }
