@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const entityService = require('../services/entityService');
+const encryptionService = require('../services/encryptionService');
 const {entity} = require("../middleware/validators");
 const Validators = require('../middleware/validators').entity;
 
@@ -37,6 +38,17 @@ router.delete('/', Validators.deleteObject, async (req, res) => {
     res.status(400).json({ success: false, message: e.message });
   }
 });
+
+router.get('/:id/key', async (req, res) => {
+  try {
+    const key = encryptionService.encrypt(req.params.id);
+
+    res.status(200).json({ success: true, id: req.params.id, key });
+  } catch (e) {
+    console.error(e);
+    res.status(400).json({ success: false, message: e.message });
+  }
+})
 
 module.exports = (app) => {
   app.use('/object', router);
