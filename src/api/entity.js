@@ -65,5 +65,16 @@ module.exports = (app) => {
     }
   });
 
+  app.get('/key/:token', async (req, res) => {
+    try {
+      const entities = await entityService.getObjectsByKeys([req.params.token]);
+
+      res.status(200).json(entities[0]);
+    } catch (e) {
+      console.error(e);
+      res.status(400).json({ success: false, message: e.message});
+    }
+  })
+
   console.log('+ + Entity API');
 }

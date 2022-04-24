@@ -34,6 +34,7 @@ module.exports = async (app) => {
     { route: '/direction', role: 'admin', methods: ['*'] },
     { route: '/delete_file', role: 'admin', methods: ['DELETE']},
     { route: '/uploads', role: '*', methods: ['*']},
+    { route: '/key', role: '*', methods: ['*']},
     { route: '/upload', role: 'admin', methods: ['*']},
   ], config.apiPrefix));
 
