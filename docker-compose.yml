@@ -4,4 +4,4 @@ services:
   back:
     image: rtuitlab/geohelper-back
     environment:
-    - PORT=3001
+      - PORT=3001

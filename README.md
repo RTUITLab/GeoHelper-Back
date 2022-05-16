@@ -63,3 +63,21 @@ This service uses Unity3d to build Android and iOS AssetBundles from [glTG](http
 1. [Unity Hub in Docker](https://hub.docker.com/r/unityci/hub) - parent Docker image used to install Unity Editor and modules inside Docker image
 2. [Mitmadness](https://github.com/mitmadness) created js unity invoker that formed the basis of the AssetBundle building solution
 3. [GLTFast](https://github.com/atteneder/glTFast) - unitypackage importing glTf models to Unity Editor
+
+## Docker run
+1. Build image
+    ```bash
+    docker build -t geohelper-back -f deploy/Dockerfile .
+    ```
+    or
+    ```bash
+    docker compose -f docker-compose.override.yml build
+    ```
+1. Run image
+    ```bash
+    docker run -d -p 3001:3001 geohelper-back
+    ```
+    or
+    ```bash
+    docker compose -f docker-compose.override.yml up -d
+    ```
