@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 resources:
-- repo: self
+  - repo: self
 
 name: $(BuildID)-$(Build.SourceBranchName)
 
@@ -43,7 +43,7 @@ stages:
               containerRegistry: 'rtuitlab connection by admin'
               repository: 'rtuitlab/geohelper-back'
               command: '${{ variables.dockerCommand }}'
-              Dockerfile: 'Dockerfile'
+              Dockerfile: 'deploy/Dockerfile'
               buildContext: '.'
               tags: ${{ variables.imageTags }}
               addPipelineData: false
@@ -56,7 +56,7 @@ stages:
               containerRegistry: 'private rtuitlab registry'
               repository: 'geohelper/back'
               command: '${{ variables.dockerCommand }}'
-              Dockerfile: 'Dockerfile'
+              Dockerfile: 'deploy/Dockerfile'
               buildContext: '.'
               tags: ${{ variables.imageTags }}
               addPipelineData: false
