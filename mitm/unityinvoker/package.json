@@ -41,7 +41,7 @@
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.12",
     "@types/pify": "^0.0.28",
-    "semantic-release": "^6.3.2",
+    "semantic-release": "^17.2.3",
     "tslint": "^5.1.0",
     "typescript": "^2.2.2"
   },
